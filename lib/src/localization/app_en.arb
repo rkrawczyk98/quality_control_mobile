@@ -1,0 +1,6 @@
+{
+  "appTitle": "quality_control_mobile",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
