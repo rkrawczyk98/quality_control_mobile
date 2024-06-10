@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/screens/login_screen.dart';
+import 'package:quality_control_mobile/src/screens/component_panel/component_screen.dart';
+import 'package:quality_control_mobile/src/screens/auth/login_screen.dart';
 import 'package:quality_control_mobile/src/services/auth_service.dart';
 
 class AppScaffold extends StatelessWidget {
@@ -58,17 +59,31 @@ class AppScaffold extends StatelessWidget {
                     'assets/images/flutter_logo.png'), // Dodaj swoje logo
               ),
               ListTile(
+                title: const Text('Zarządzanie komponentami'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ComponentScreen()),
+                  );
+                },
+              ),
+              ListTile(
                 title: const Text('Ustawienia'),
                 onTap: () {},
               ),
               ListTile(
-                title: const Text('Pomoc'),
-                onTap: () {},
+                title: const Text('Panel administratora'),
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
               ),
-              ListTile(
-                title: const Text('O aplikacji'),
-                onTap: () {},
-              ),
+              // ListTile(
+              //   title: const Text('Pomoc'),
+              //   onTap: () {},
+              // ),
               ListTile(
                 leading: Icon(Icons.logout),
                 title: const Text('Wyloguj'),
@@ -92,16 +107,17 @@ class AppScaffold extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Wylogowanie'),
-          content: Text('Czy chcesz wylogować się ze wszystkich urządzeń?'),
+          title: const Text('Wylogowanie'),
+          content:
+              const Text('Czy chcesz wylogować się ze wszystkich urządzeń?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text('Nie'),
+              child: const Text('Nie'),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: Text('Tak'),
+              child: const Text('Tak'),
             ),
           ],
         );

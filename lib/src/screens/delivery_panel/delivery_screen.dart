@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/screens/add_delivery_screen.dart';
+import 'package:quality_control_mobile/src/screens/delivery_panel/add_delivery_screen.dart';
 import 'package:quality_control_mobile/src/services/delivery_service.dart';
-import 'package:quality_control_mobile/src/screens/delivery_details_screen.dart';
+import 'package:quality_control_mobile/src/screens/delivery_panel/delivery_details_screen.dart';
 import 'package:quality_control_mobile/src/widgets/scaffold_app.dart';
 
 class DeliveryScreen extends StatefulWidget {
@@ -52,7 +52,8 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 class DeliveryList extends StatelessWidget {
   final Future<List<Delivery>> futureDeliveries;
 
-  const DeliveryList({Key? key, required this.futureDeliveries}) : super(key: key);
+  const DeliveryList({Key? key, required this.futureDeliveries})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -162,8 +163,8 @@ class PackageItem extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: onTap,
-                  child: const Text('Szczegóły'),
                   style: TextButton.styleFrom(foregroundColor: Colors.green),
+                  child: const Text('Szczegóły'),
                 ),
               ],
             ),

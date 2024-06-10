@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/screens/delivery_screen.dart';
+import 'package:quality_control_mobile/src/screens/delivery_panel/delivery_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quality_control_mobile/src/services/auth_service.dart';
 
@@ -85,15 +85,20 @@ class _LoginScreenState extends State<LoginScreen> {
         title: const Text('Logowanie'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 80),
+        //padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
                 controller: _usernameController,
-                decoration:
-                    const InputDecoration(labelText: 'Nazwa użytkownika'),
+                textAlign: TextAlign.center,
+                decoration: const InputDecoration(
+                    labelText: 'Nazwa użytkownika',
+                    floatingLabelAlignment: FloatingLabelAlignment.center,
+                    border: OutlineInputBorder()),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Podaj nazwę użytwkonika';
@@ -104,8 +109,12 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Hasło'),
+                decoration: const InputDecoration(
+                    labelText: 'Hasło',
+                    floatingLabelAlignment: FloatingLabelAlignment.center,
+                    border: OutlineInputBorder()),
                 obscureText: true,
+                textAlign: TextAlign.center,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Podaj hasło';
@@ -115,6 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Checkbox(
                     value: _rememberMe,

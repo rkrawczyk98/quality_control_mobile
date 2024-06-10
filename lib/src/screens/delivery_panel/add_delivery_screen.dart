@@ -15,7 +15,7 @@ class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
   final ComponentTypeService componentTypeService = ComponentTypeService();
   final CustomerService customerService = CustomerService();
   final DeliveryService deliveryService = DeliveryService();
-  
+
   late Future<List<ComponentType>> componentTypes;
   late Future<List<Customer>> customers;
 
@@ -44,6 +44,88 @@ class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
     }
   }
 
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      final newDelivery = CreateDeliveryDto(
+        componentTypeId: _selectedComponentType!,
+        customerId: _selectedCustomer!,
+        deliveryDate: _selectedDate?.toIso8601String() ??
+            DateTime.now().toIso8601String(),
+      );
+      try {
+        await deliveryService.createDelivery(newDelivery); //To DO ZROBIENIA
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Container(
+            padding: const EdgeInsets.all(8),
+            height: 75,
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: const Row(
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 40,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Sukces!",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                      ),
+                      Text(
+                        "Dostawa została dodana pomyślnie!",
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: Colors.transparent,
+          elevation: 3,
+        ));
+
+        // await deliveryService.createDelivery(newDelivery); To DO ZROBIENIA
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //       backgroundColor: Colors.lightGreen.shade600,
+        //       content: Container(
+        //         padding: const EdgeInsets.all(8),
+        //         height: 80,
+        //         decoration: const BoxDecoration(
+        //           child: Row(
+        //             children: [Text('Dostawa została dodana pomyślnie!')],
+        //           ),
+        //       )
+        //       behavior: SnackBarBehavior.floating,
+        //       backgroundColor: Colors.transparent,
+        //       elevation: 3,
+        //       ),
+        // );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Błąd przy dodawaniu dostawy: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +149,8 @@ class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
                     return const Text('No component types available');
                   } else {
                     return DropdownButtonFormField<int>(
-                      decoration: const InputDecoration(labelText: 'Typ komponentu'),
+                      decoration:
+                          const InputDecoration(labelText: 'Typ komponentu'),
                       value: _selectedComponentType,
                       onChanged: (int? newValue) {
                         setState(() {
@@ -146,17 +229,7 @@ class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final newDelivery = CreateDeliveryDto(
-                      componentTypeId: _selectedComponentType!,
-                      customerId: _selectedCustomer!,
-                      deliveryDate: _selectedDate?.toIso8601String() ?? DateTime.now().toIso8601String(),
-                    );
-                    await deliveryService.createDelivery(newDelivery);
-                    Navigator.pop(context, true);
-                  }
-                },
+                onPressed: _submitForm,
                 child: const Text('Dodaj Dostawę'),
               ),
             ],

@@ -48,8 +48,9 @@ class DeliveryService {
     }
   }
 
-  Future<Delivery> createDelivery(CreateDeliveryDto createDeliveryDto) async {
-    await _loadAuthToken();
+Future<Delivery> createDelivery(CreateDeliveryDto createDeliveryDto) async {
+  await _loadAuthToken();
+  try {
     final response = await http.post(
       Uri.parse(baseUrl),
       headers: {
@@ -62,9 +63,13 @@ class DeliveryService {
     if (response.statusCode == 201) {
       return Delivery.fromJson(json.decode(response.body) as Map<String, dynamic>);
     } else {
-      throw Exception('Failed to create delivery');
+      throw Exception('Failed to create delivery: ${response.body}');
     }
+  } catch (e) {
+    print('Error creating delivery: $e');
+    rethrow;  // Rzuć ponownie wyjątek do obsługi na wyższym poziomie
   }
+}
 
   Future<void> deleteDelivery(int id) async {
     await _loadAuthToken();
