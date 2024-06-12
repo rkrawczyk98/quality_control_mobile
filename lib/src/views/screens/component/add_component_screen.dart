@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/services/component_service.dart';
+import 'package:quality_control_mobile/src/data/services/component_service.dart';
+import 'package:quality_control_mobile/src/models/component_models.dart';
 
 class AddComponentScreen extends StatefulWidget {
   const AddComponentScreen({Key? key}) : super(key: key);
@@ -145,7 +146,7 @@ class _AddComponentScreenState extends State<AddComponentScreen> {
               TextFormField(
                 decoration:
                     const InputDecoration(labelText: 'Rozmiar komponentu'),
-                keyboardType: TextInputType.number,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 onChanged: (value) {
                   _componentSize = double.parse(value);
                 },

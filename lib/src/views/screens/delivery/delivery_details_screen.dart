@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/services/delivery_service.dart';
-import 'package:quality_control_mobile/src/common/utils.dart';
+import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
+import 'package:quality_control_mobile/src/models/delivery_models.dart';
+import 'package:quality_control_mobile/src/utils/formatters/deliveryDateFormater.dart';
 
 class DeliveryDetailsScreen extends StatelessWidget {
   final int deliveryId;

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/services/component_type_service.dart';
-import 'package:quality_control_mobile/src/services/customer_service.dart';
-import 'package:quality_control_mobile/src/services/delivery_service.dart';
+import 'package:quality_control_mobile/src/data/services/component_type_service.dart';
+import 'package:quality_control_mobile/src/data/services/customer_service.dart';
+import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
+import 'package:quality_control_mobile/src/models/component_type_models.dart';
+import 'package:quality_control_mobile/src/models/customer_models.dart';
+import 'package:quality_control_mobile/src/models/delivery_models.dart';
 
 class AddDeliveryScreen extends StatefulWidget {
-  const AddDeliveryScreen({Key? key}) : super(key: key);
+  const AddDeliveryScreen({super.key});
 
   @override
-  _AddDeliveryScreenState createState() => _AddDeliveryScreenState();
+  AddDeliveryScreenState createState() => AddDeliveryScreenState();
 }
 
-class _AddDeliveryScreenState extends State<AddDeliveryScreen> {
+class AddDeliveryScreenState extends State<AddDeliveryScreen> {
   final _formKey = GlobalKey<FormState>();
   final ComponentTypeService componentTypeService = ComponentTypeService();
   final CustomerService customerService = CustomerService();

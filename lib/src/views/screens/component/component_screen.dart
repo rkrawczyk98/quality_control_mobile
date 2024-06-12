@@ -1,86 +1,78 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/screens/delivery_panel/add_delivery_screen.dart';
-import 'package:quality_control_mobile/src/services/delivery_service.dart';
-import 'package:quality_control_mobile/src/screens/delivery_panel/delivery_details_screen.dart';
-import 'package:quality_control_mobile/src/widgets/scaffold_app.dart';
+import 'package:quality_control_mobile/src/data/services/component_service.dart';
+import 'package:quality_control_mobile/src/models/component_models.dart';
+import 'package:quality_control_mobile/src/views/widgets/scaffold_app.dart';
+import 'package:quality_control_mobile/src/views/screens/component/add_component_screen.dart';
 
-class DeliveryScreen extends StatefulWidget {
-  const DeliveryScreen({Key? key}) : super(key: key);
+class ComponentScreen extends StatefulWidget {
+  const ComponentScreen({Key? key}) : super(key: key);
 
   @override
-  _DeliveryScreenState createState() => _DeliveryScreenState();
+  _ComponentScreenState createState() => _ComponentScreenState();
 }
 
-class _DeliveryScreenState extends State<DeliveryScreen> {
-  late Future<List<Delivery>> futureDeliveries;
-  final DeliveryService deliveryService = DeliveryService();
+class _ComponentScreenState extends State<ComponentScreen> {
+  late Future<List<Component>> futureComponents;
+  final ComponentService componentService = ComponentService();
 
   @override
   void initState() {
     super.initState();
-    _loadDeliveries();
+    _loadComponents();
   }
 
-  Future<void> _loadDeliveries() async {
+  Future<void> _loadComponents() async {
     setState(() {
-      futureDeliveries = deliveryService.fetchDeliveries();
+      futureComponents = componentService.fetchComponents();
     });
   }
 
-  void _refreshDeliveries() {
+  void _refreshComponents() {
     setState(() {
-      futureDeliveries = deliveryService.fetchDeliveries();
+      futureComponents = componentService.fetchComponents();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      title: 'Zarządzanie dostawami',
+      title: 'Zarządzanie komponentami',
       tabs: const [
         Tab(text: 'Przeglądaj'),
         Tab(text: 'Utwórz'),
       ],
       children: [
-        DeliveryList(futureDeliveries: futureDeliveries),
-        const AddDeliveryScreen(),
+        ComponentList(futureComponents: futureComponents),
+        const AddComponentScreen(),
       ],
     );
   }
 }
 
-class DeliveryList extends StatelessWidget {
-  final Future<List<Delivery>> futureDeliveries;
+class ComponentList extends StatelessWidget {
+  final Future<List<Component>> futureComponents;
 
-  const DeliveryList({Key? key, required this.futureDeliveries})
-      : super(key: key);
+  const ComponentList({Key? key, required this.futureComponents}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Delivery>>(
-      future: futureDeliveries,
+    return FutureBuilder<List<Component>>(
+      future: futureComponents,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No deliveries found'));
+          return const Center(child: Text('No components found'));
         } else {
           return ListView(
             padding: const EdgeInsets.all(16),
-            children: snapshot.data!.map((delivery) {
-              return PackageItem(
-                delivery: delivery,
+            children: snapshot.data!.map((component) {
+              return ComponentItem(
+                component: component,
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DeliveryDetailsScreen(
-                        deliveryId: delivery.id,
-                      ),
-                    ),
-                  );
+                  // Dodaj logikę przejścia do szczegółów komponentu, jeśli istnieje
                 },
               );
             }).toList(),
@@ -91,13 +83,13 @@ class DeliveryList extends StatelessWidget {
   }
 }
 
-class PackageItem extends StatelessWidget {
-  final Delivery delivery;
+class ComponentItem extends StatelessWidget {
+  final Component component;
   final VoidCallback onTap;
 
-  const PackageItem({
+  const ComponentItem({
     Key? key,
-    required this.delivery,
+    required this.component,
     required this.onTap,
   }) : super(key: key);
 
@@ -112,12 +104,12 @@ class PackageItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Numer dostawy',
+              'Nazwa komponentu',
               style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 4),
             Text(
-              delivery.number,
+              component.name,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -128,34 +120,17 @@ class PackageItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Status',
+                  'Data kontroli',
                   style: TextStyle(color: Colors.grey),
                 ),
                 Text(
-                  delivery.status.name,
+                  component.controlDate?.toString() ?? 'Brak',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  delivery.deliveryDate.toString(),
-                  style: const TextStyle(color: Colors.grey),
-                ),
               ],
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Klient',
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              delivery.customer.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
             ),
             const SizedBox(height: 16),
             Row(
