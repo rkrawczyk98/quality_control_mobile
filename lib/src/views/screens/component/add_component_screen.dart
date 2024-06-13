@@ -3,13 +3,13 @@ import 'package:quality_control_mobile/src/data/services/component_service.dart'
 import 'package:quality_control_mobile/src/models/component_models.dart';
 
 class AddComponentScreen extends StatefulWidget {
-  const AddComponentScreen({Key? key}) : super(key: key);
+  const AddComponentScreen({super.key});
 
   @override
-  _AddComponentScreenState createState() => _AddComponentScreenState();
+  AddComponentScreenState createState() => AddComponentScreenState();
 }
 
-class _AddComponentScreenState extends State<AddComponentScreen> {
+class AddComponentScreenState extends State<AddComponentScreen> {
   final _formKey = GlobalKey<FormState>();
   final ComponentService componentService = ComponentService();
 

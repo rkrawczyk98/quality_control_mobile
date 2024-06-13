@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/services/component_service.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
-import 'package:quality_control_mobile/src/views/widgets/scaffold_app.dart';
+import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 import 'package:quality_control_mobile/src/views/screens/component/add_component_screen.dart';
 
 class ComponentScreen extends StatefulWidget {
-  const ComponentScreen({Key? key}) : super(key: key);
+  const ComponentScreen({super.key});
 
   @override
-  _ComponentScreenState createState() => _ComponentScreenState();
+  ComponentScreenState createState() => ComponentScreenState();
 }
 
-class _ComponentScreenState extends State<ComponentScreen> {
+class ComponentScreenState extends State<ComponentScreen> {
   late Future<List<Component>> futureComponents;
   final ComponentService componentService = ComponentService();
 
@@ -27,6 +27,7 @@ class _ComponentScreenState extends State<ComponentScreen> {
     });
   }
 
+  // ignore: unused_element
   void _refreshComponents() {
     setState(() {
       futureComponents = componentService.fetchComponents();
@@ -35,24 +36,49 @@ class _ComponentScreenState extends State<ComponentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: 'Zarządzanie komponentami',
-      tabs: const [
-        Tab(text: 'Przeglądaj'),
-        Tab(text: 'Utwórz'),
-      ],
-      children: [
-        ComponentList(futureComponents: futureComponents),
-        const AddComponentScreen(),
-      ],
+    return DefaultTabController(
+      length: 2,
+      child: GlobalScaffold(
+        appBar: AppBar(
+          title: const Text('Zarządzanie komponentami'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Przeglądaj'),
+              Tab(text: 'Utwórz'),
+            ],
+          ),
+        ),
+        child: TabBarView(
+          children: [
+            ComponentList(futureComponents: futureComponents),
+            const AddComponentScreen(),
+          ],
+        ),
+      ),
     );
   }
 }
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return AppScaffold(
+//       title: 'Zarządzanie komponentami',
+//       tabs: const [
+//         Tab(text: 'Przeglądaj'),
+//         Tab(text: 'Utwórz'),
+//       ],
+//       children: [
+//         ComponentList(futureComponents: futureComponents),
+//         const AddComponentScreen(),
+//       ],
+//     );
+//   }
+// }
+
 class ComponentList extends StatelessWidget {
   final Future<List<Component>> futureComponents;
 
-  const ComponentList({Key? key, required this.futureComponents}) : super(key: key);
+  const ComponentList({super.key, required this.futureComponents});
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +114,10 @@ class ComponentItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const ComponentItem({
-    Key? key,
+    super.key,
     required this.component,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

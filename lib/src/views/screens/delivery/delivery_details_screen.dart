@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
-import 'package:quality_control_mobile/src/utils/formatters/deliveryDateFormater.dart';
+import 'package:quality_control_mobile/src/utils/formatters/delivery_date_formater.dart';
 
 class DeliveryDetailsScreen extends StatelessWidget {
   final int deliveryId;
 
-  const DeliveryDetailsScreen({Key? key, required this.deliveryId})
-      : super(key: key);
+  const DeliveryDetailsScreen({super.key, required this.deliveryId});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class DeliveryDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Expanded(
                     child: ListView(
-                      children: [const Text('Brak historii dostawy')],
+                      children: const [Text('Brak historii dostawy')],
                     ),
                   ),
                 ],
@@ -88,7 +87,7 @@ class DeliveryInfo extends StatelessWidget {
   final String componentType;
 
   const DeliveryInfo({
-    Key? key,
+    super.key,
     required this.number,
     required this.status,
     required this.statusDate,
@@ -96,7 +95,7 @@ class DeliveryInfo extends StatelessWidget {
     required this.deliveryDate,
     required this.createdByUser,
     required this.componentType,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -217,12 +216,12 @@ class DeliveryHistoryItem extends StatelessWidget {
   final Color iconColor;
 
   const DeliveryHistoryItem({
-    Key? key,
+    super.key,
     required this.status,
     required this.date,
     required this.icon,
     required this.iconColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

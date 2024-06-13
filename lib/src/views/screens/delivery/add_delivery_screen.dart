@@ -103,24 +103,6 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
           backgroundColor: Colors.transparent,
           elevation: 3,
         ));
-
-        // await deliveryService.createDelivery(newDelivery); To DO ZROBIENIA
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //       backgroundColor: Colors.lightGreen.shade600,
-        //       content: Container(
-        //         padding: const EdgeInsets.all(8),
-        //         height: 80,
-        //         decoration: const BoxDecoration(
-        //           child: Row(
-        //             children: [Text('Dostawa została dodana pomyślnie!')],
-        //           ),
-        //       )
-        //       behavior: SnackBarBehavior.floating,
-        //       backgroundColor: Colors.transparent,
-        //       elevation: 3,
-        //       ),
-        // );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Błąd przy dodawaniu dostawy: $e')),

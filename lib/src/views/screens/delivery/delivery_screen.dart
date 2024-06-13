@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/main.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/add_delivery_screen.dart';
 import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_details_screen.dart';
-import 'package:quality_control_mobile/src/views/widgets/scaffold_app.dart';
-// import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 
 class DeliveryScreen extends StatefulWidget {
-  const DeliveryScreen({Key? key}) : super(key: key);
+  const DeliveryScreen({super.key});
 
   @override
-  _DeliveryScreenState createState() => _DeliveryScreenState();
+  DeliveryScreenState createState() => DeliveryScreenState();
 }
 
-class _DeliveryScreenState extends State<DeliveryScreen> {
+class DeliveryScreenState extends State<DeliveryScreen> {
   late Future<List<Delivery>> futureDeliveries;
   final DeliveryService deliveryService = DeliveryService();
 
@@ -30,6 +28,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
     });
   }
 
+  // ignore: unused_element
   void _refreshDeliveries() {
     setState(() {
       futureDeliveries = deliveryService.fetchDeliveries();
@@ -38,17 +37,25 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: 'Zarządzanie dostawami',
-      tabs: const [
-        Tab(text: 'Przeglądaj'),
-        Tab(text: 'Utwórz'),
-      ],
-      children: [
-        DeliveryList(futureDeliveries: futureDeliveries),
-        const AddDeliveryScreen(),
-      ],
-      floatingActionButton: HomeScreen().buildSpeedDial(context),
+    return DefaultTabController(
+      length: 2, // Dla dwóch zakładek
+      child: GlobalScaffold(
+        appBar: AppBar(
+          title: const Text('Zarządzanie dostawami'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Przeglądaj'),
+              Tab(text: 'Utwórz'),
+            ],
+          ),
+        ),
+        child: TabBarView(
+          children: [
+            DeliveryList(futureDeliveries: futureDeliveries),
+            const AddDeliveryScreen(),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -56,8 +63,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
 class DeliveryList extends StatelessWidget {
   final Future<List<Delivery>> futureDeliveries;
 
-  const DeliveryList({Key? key, required this.futureDeliveries})
-      : super(key: key);
+  const DeliveryList({super.key, required this.futureDeliveries});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +75,7 @@ class DeliveryList extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No deliveries found'));
+          return const Center(child: Text('Nie znaleziono żadnej dostawy.'));
         } else {
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -100,10 +106,10 @@ class PackageItem extends StatelessWidget {
   final VoidCallback onTap;
 
   const PackageItem({
-    Key? key,
+    super.key,
     required this.delivery,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
