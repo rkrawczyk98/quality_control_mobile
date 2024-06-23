@@ -52,7 +52,7 @@ class GlobalScaffold extends StatelessWidget {
       shape: const CircleBorder(),
       children: [
         SpeedDialChild(
-          child: const Icon(Icons.local_shipping_outlined),
+          child: const Icon(Icons.local_shipping_outlined, color: Colors.white,),
           backgroundColor: Colors.orange,
           label: 'Panel dostaw',
           labelStyle: const TextStyle(fontSize: 18.0),
@@ -62,7 +62,7 @@ class GlobalScaffold extends StatelessWidget {
           ),
         ),
         SpeedDialChild(
-          child: const Icon(Icons.category),
+          child: const Icon(Icons.view_in_ar_sharp, color: Colors.white,),
           backgroundColor: Colors.blue,
           label: 'Panel komponentów',
           labelStyle: const TextStyle(fontSize: 18.0),

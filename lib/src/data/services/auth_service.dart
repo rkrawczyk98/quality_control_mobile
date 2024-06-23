@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:quality_control_mobile/src/models/auth_models.dart';
+import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
 class AuthService {
   final String baseUrl = 'http://172.22.175.245:8080/auth';
+  http.Client httpClient = AuthenticatedHttpClient(http.Client());
 
   Future<Map<String, dynamic>> login(LoginRequest request) async {
     final response = await http.post(
@@ -20,7 +22,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> refreshToken(RefreshTokenRequest request) async {
-    final response = await http.post(
+    final response = await httpClient.post(
       Uri.parse('$baseUrl/refresh'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(request.toJson()),

@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:quality_control_mobile/src/models/customer_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
 class CustomerService {
   final String baseUrl = 'http://172.22.175.245:8080/customers';
+  http.Client httpClient = AuthenticatedHttpClient(http.Client());
   String? _jwtToken;
 
   Future<void> _loadAuthToken() async {
@@ -16,7 +18,7 @@ class CustomerService {
 
   Future<List<Customer>> fetchCustomers() async {
     await _loadAuthToken();
-    final response = await http.get(
+    final response = await httpClient.get(
       Uri.parse(baseUrl),
       headers: {
         'Authorization': 'Bearer $_jwtToken',
@@ -34,7 +36,7 @@ class CustomerService {
 
   Future<Customer> fetchCustomer(int id) async {
     await _loadAuthToken();
-    final response = await http.get(
+    final response = await httpClient.get(
       Uri.parse('$baseUrl/$id'),
       headers: {
         'Authorization': 'Bearer $_jwtToken',
@@ -51,7 +53,7 @@ class CustomerService {
 
   Future<Customer> createCustomer(CreateCustomerDto createCustomerDto) async {
     await _loadAuthToken();
-    final response = await http.post(
+    final response = await httpClient.post(
       Uri.parse(baseUrl),
       headers: {
         'Authorization': 'Bearer $_jwtToken',
@@ -69,7 +71,7 @@ class CustomerService {
 
   Future<Customer> updateCustomer(int id, UpdateCustomerDto updateCustomerDto) async {
     await _loadAuthToken();
-    final response = await http.put(
+    final response = await httpClient.put(
       Uri.parse('$baseUrl/$id'),
       headers: {
         'Authorization': 'Bearer $_jwtToken',
@@ -87,7 +89,7 @@ class CustomerService {
 
   Future<void> deleteCustomer(int id) async {
     await _loadAuthToken();
-    final response = await http.delete(
+    final response = await httpClient.delete(
       Uri.parse('$baseUrl/$id'),
       headers: {
         'Authorization': 'Bearer $_jwtToken',

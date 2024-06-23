@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
 import 'package:quality_control_mobile/src/data/services/component_service.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
@@ -18,7 +20,8 @@ class ComponentScreenState extends State<ComponentScreen> {
   @override
   void initState() {
     super.initState();
-    _loadComponents();
+    final provider = Provider.of<ComponentProvider>(context, listen: false);
+    provider.fetchComponents();
   }
 
   Future<void> _loadComponents() async {
@@ -27,7 +30,6 @@ class ComponentScreenState extends State<ComponentScreen> {
     });
   }
 
-  // ignore: unused_element
   void _refreshComponents() {
     setState(() {
       futureComponents = componentService.fetchComponents();
@@ -48,10 +50,10 @@ class ComponentScreenState extends State<ComponentScreen> {
             ],
           ),
         ),
-        child: TabBarView(
+        child: const TabBarView(
           children: [
-            ComponentList(futureComponents: futureComponents),
-            const AddComponentScreen(),
+            ComponentList(),
+            AddComponentScreen(),
           ],
         ),
       ),
@@ -76,34 +78,26 @@ class ComponentScreenState extends State<ComponentScreen> {
 // }
 
 class ComponentList extends StatelessWidget {
-  final Future<List<Component>> futureComponents;
-
-  const ComponentList({super.key, required this.futureComponents});
+  const ComponentList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Component>>(
-      future: futureComponents,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+    return Consumer<ComponentProvider>(
+      builder: (context, provider, child) {
+        if (provider.components.isEmpty) {
           return const Center(child: Text('No components found'));
-        } else {
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: snapshot.data!.map((component) {
-              return ComponentItem(
-                component: component,
-                onTap: () {
-                  // Dodaj logikę przejścia do szczegółów komponentu, jeśli istnieje
-                },
-              );
-            }).toList(),
-          );
         }
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: provider.components.map((component) {
+            return ComponentItem(
+              component: component,
+              onTap: () {
+                // Dodaj logikę przejścia do szczegółów komponentu, jeśli istnieje
+              },
+            );
+          }).toList(),
+        );
       },
     );
   }

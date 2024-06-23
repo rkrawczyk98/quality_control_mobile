@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
-import 'package:quality_control_mobile/src/utils/formatters/delivery_date_formater.dart';
+import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 
 class DeliveryDetailsScreen extends StatelessWidget {
   final int deliveryId;
@@ -49,7 +49,7 @@ class DeliveryDetailsScreen extends StatelessWidget {
                     status: delivery.status.name,
                     statusDate: delivery.deliveryDate.toIso8601String(),
                     client: delivery.customer.name,
-                    deliveryDate: formatDeliveryDate(delivery.creationDate),
+                    deliveryDate: formatDate(delivery.creationDate),
                     createdByUser: delivery.createdByUser.username,
                     componentType: delivery.componentType.name,
                   ),
