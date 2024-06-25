@@ -5,13 +5,11 @@ import 'package:quality_control_mobile/src/data/services/auth_service.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthTokens? _tokens;
-  late AuthService _authService;
+  final AuthService _authService;
+
+  AuthProvider(this._authService);
 
   AuthTokens? get tokens => _tokens;
-
-  void initializeAuthService(AuthService authService) {
-    _authService = authService;
-  }
 
   Future<void> setTokens(AuthTokens tokens) async {
     _tokens = tokens;
@@ -34,12 +32,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<String> refreshToken() async {
-    final newTokens = await _authService.refreshToken();
-    await setTokens(AuthTokens(
-        accessToken: newTokens['access_token'],
-        refreshToken: newTokens['refresh_token'],
-        userId: _tokens?.userId // Retain the original user ID
-        ));
+    final refreshToken = _tokens?.refreshToken;
+    if (refreshToken == null) {
+      throw Exception('No refresh token available');
+    }
+    final newTokens = await _authService.refreshToken(refreshToken);
+    await setTokens(AuthTokens.fromMap(newTokens));
     return _tokens!.accessToken;
   }
 

@@ -6,12 +6,11 @@ class AuthController {
   final AuthService _service;
   final AuthProvider _authProvider;
 
-  AuthController(this._authProvider)
-      : _service = AuthService(_authProvider);
+  AuthController(this._authProvider, this._service);
 
   Future<void> login(String username, String password) async {
     final loginRequest = LoginRequest(username: username, password: password);
-    final response = await _service.login(loginRequest);
+    final response = await _service.login(loginRequest.toJson());
     final tokens = AuthTokens(
       accessToken: response['access_token'],
       refreshToken: response['refresh_token'],
@@ -25,11 +24,11 @@ class AuthController {
     if (refreshToken == null) {
       throw Exception('No refresh token available');
     }
-    final response = await _service.refreshToken();
+    final response = await _service.refreshToken(refreshToken);
     final tokens = AuthTokens(
       accessToken: response['access_token'],
       refreshToken: response['refresh_token'],
-      userId: null,
+      userId: _authProvider.tokens?.userId,
     );
     await _authProvider.setTokens(tokens);
   }
@@ -39,7 +38,7 @@ class AuthController {
     if (userId == null) {
       throw Exception('No user ID found');
     }
-    await _service.logoutAll();
+    await _service.logoutAll(userId);
     await _authProvider.clearTokens();
   }
 
@@ -48,7 +47,7 @@ class AuthController {
     if (refreshToken == null) {
       throw Exception('No refresh token available');
     }
-    await _service.logoutSingle();
+    await _service.logoutSingle(refreshToken);
     await _authProvider.clearTokens();
   }
 }

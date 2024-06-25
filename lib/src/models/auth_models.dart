@@ -8,6 +8,14 @@ class AuthTokens {
     required this.refreshToken,
     this.userId,
   });
+
+  factory AuthTokens.fromMap(Map<String, dynamic> map) {
+    return AuthTokens(
+      accessToken: map['access_token'] as String,
+      refreshToken: map['refresh_token'] as String,
+      userId: map['user_id'] as int?,
+    );
+  }
 }
 
 class LoginRequest {

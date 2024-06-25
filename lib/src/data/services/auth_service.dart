@@ -1,95 +1,60 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
-import 'package:quality_control_mobile/src/models/auth_models.dart';
-import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
 class AuthService {
   final String baseUrl = 'http://172.22.175.245:8080/auth';
-  http.Client httpClient;
-  AuthProvider authProvider;
+  final http.Client httpClient;
 
-  AuthService(this.authProvider)
-      : httpClient = AuthenticatedHttpClient(http.Client(), authProvider);
+  AuthService() : httpClient = http.Client();
 
-  void initializeAuthProvider(AuthProvider provider) {
-    authProvider = provider;
-    httpClient = AuthenticatedHttpClient(http.Client(), provider);
-  }
-
-  Future<Map<String, dynamic>> login(LoginRequest request) async {
-    final response = await http.post(
+  Future<Map<String, dynamic>> login(Map<String, dynamic> loginData) async {
+    final response = await httpClient.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(request.toJson()),
+      body: jsonEncode(loginData),
     );
 
     if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      await authProvider.setTokens(AuthTokens(
-        accessToken: data['access_token'],
-        refreshToken: data['refresh_token'],
-        userId: data['user_id'],
-      ));
-      return data;
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to login');
     }
   }
 
-  Future<Map<String, dynamic>> refreshToken() async {
-    final refreshToken = authProvider.tokens?.refreshToken;
-    if (refreshToken == null) throw Exception('No refresh token available');
-
+  Future<Map<String, dynamic>> refreshToken(String refreshToken) async {
     final response = await httpClient.post(
       Uri.parse('$baseUrl/refresh'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'refresh_token': refreshToken}),
     );
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-      await authProvider.setTokens(AuthTokens(
-        accessToken: data['access_token'],
-        refreshToken: data['refresh_token'],
-        userId: authProvider.tokens?.userId,
-      ));
-      return data;
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
     } else {
       throw Exception('Failed to refresh token');
     }
   }
 
-  Future<void> logoutAll() async {
-    final userId = authProvider.tokens?.userId;
-    if (userId == null) throw Exception('No user ID found');
-
+  Future<void> logoutAll(int userId) async {
     final response = await httpClient.post(
       Uri.parse('$baseUrl/logout'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'user_id': userId}),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      await authProvider.clearTokens();
-    } else {
+    if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to logout');
     }
   }
 
-  Future<void> logoutSingle() async {
-    final refreshToken = authProvider.tokens?.refreshToken;
-    if (refreshToken == null) throw Exception('No refresh token available');
-
+  Future<void> logoutSingle(String refreshToken) async {
     final response = await httpClient.post(
       Uri.parse('$baseUrl/logout-single'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'refresh_token': refreshToken}),
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      await authProvider.clearTokens();
-    } else {
+    if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception('Failed to logout from single device');
     }
   }

@@ -10,16 +10,20 @@ import 'package:quality_control_mobile/src/data/providers/customer_provider.dart
 import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/subcomponent_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/subcomponent_status_provider.dart';
+import 'package:quality_control_mobile/src/data/services/auth_service.dart';
 import 'src/data/controllers/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pl', null);
+
+  final authService = AuthService();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
+          create: (_) => AuthProvider(authService),
         ),
         ChangeNotifierProvider(
           create: (context) => ComponentProvider(
@@ -51,7 +55,7 @@ void main() async {
         ),
         Provider(
           create: (context) =>
-              AuthController(Provider.of<AuthProvider>(context, listen: false)),
+              AuthController(Provider.of<AuthProvider>(context, listen: false),authService),
         ),
       ],
       child: const MyApp(),
