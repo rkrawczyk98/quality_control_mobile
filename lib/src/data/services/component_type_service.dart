@@ -1,27 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/component_type_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
 class ComponentTypeService {
   final String baseUrl = 'http://172.22.175.245:8080/component-types';
-  http.Client httpClient = AuthenticatedHttpClient(http.Client());
-  String? _jwtToken;
+  late http.Client httpClient;
 
-  Future<void> _loadAuthToken() async {
-    if (_jwtToken == null) {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      _jwtToken = prefs.getString('access_token');
-    }
+  ComponentTypeService(AuthProvider authProvider) {
+    httpClient = AuthenticatedHttpClient(http.Client(), authProvider);
   }
 
   Future<List<ComponentType>> fetchComponentTypes() async {
-    await _loadAuthToken();
     final response = await httpClient.get(
       Uri.parse(baseUrl),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json',
       },
     );
@@ -35,11 +29,9 @@ class ComponentTypeService {
   }
 
   Future<ComponentType> fetchComponentType(int id) async {
-    await _loadAuthToken();
     final response = await httpClient.get(
       Uri.parse('$baseUrl/$id'),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json',
       },
     );
@@ -52,11 +44,9 @@ class ComponentTypeService {
   }
 
   Future<ComponentType> createComponentType(CreateComponentTypeDto createComponentTypeDto) async {
-    await _loadAuthToken();
     final response = await httpClient.post(
       Uri.parse(baseUrl),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(createComponentTypeDto.toJson()),
@@ -70,11 +60,9 @@ class ComponentTypeService {
   }
 
   Future<ComponentType> updateComponentType(int id, UpdateComponentTypeDto updateComponentTypeDto) async {
-    await _loadAuthToken();
     final response = await httpClient.put(
       Uri.parse('$baseUrl/$id'),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(updateComponentTypeDto.toJson()),
@@ -88,11 +76,9 @@ class ComponentTypeService {
   }
 
   Future<void> deleteComponentType(int id) async {
-    await _loadAuthToken();
     final response = await httpClient.delete(
       Uri.parse('$baseUrl/$id'),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json',
       },
     );

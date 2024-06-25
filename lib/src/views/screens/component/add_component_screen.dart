@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/data/services/component_service.dart';
+import 'package:provider/provider.dart';
+import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
+// import 'package:quality_control_mobile/src/data/services/component_service.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
 
 class AddComponentScreen extends StatefulWidget {
@@ -11,7 +13,7 @@ class AddComponentScreen extends StatefulWidget {
 
 class AddComponentScreenState extends State<AddComponentScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ComponentService componentService = ComponentService();
+  // final ComponentService componentService = ComponentService();
 
   String? _componentName;
   DateTime? _controlDate;
@@ -36,6 +38,23 @@ class AddComponentScreenState extends State<AddComponentScreen> {
       });
     }
   }
+  // Future<void> _selectDate(BuildContext context, bool isControlDate) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2020),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null) {
+  //     setState(() {
+  //       if (isControlDate) {
+  //         _controlDate = picked;
+  //       } else {
+  //         _productionDate = picked;
+  //       }
+  //     });
+  //   }
+  // }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -47,7 +66,8 @@ class AddComponentScreenState extends State<AddComponentScreen> {
         deliveryId: _deliveryId!,
       );
       try {
-        await componentService.createComponent(newComponent);
+        await Provider.of<ComponentProvider>(context, listen: true)
+            .createComponent(newComponent);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Container(
             padding: const EdgeInsets.all(8),
@@ -102,6 +122,71 @@ class AddComponentScreenState extends State<AddComponentScreen> {
     }
   }
 
+  // Future<void> _submitForm() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newComponent = CreateComponentDto(
+  //       name: _componentName!,
+  //       controlDate: _controlDate,
+  //       productionDate: _productionDate,
+  //       size: _componentSize!,
+  //       deliveryId: _deliveryId!,
+  //     );
+  //     try {
+  //       await componentService.createComponent(newComponent);
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //         content: Container(
+  //           padding: const EdgeInsets.all(8),
+  //           height: 75,
+  //           decoration: const BoxDecoration(
+  //             color: Colors.green,
+  //             borderRadius: BorderRadius.all(Radius.circular(10)),
+  //           ),
+  //           child: const Row(
+  //             children: [
+  //               Icon(
+  //                 Icons.check_circle,
+  //                 color: Colors.white,
+  //                 size: 40,
+  //               ),
+  //               SizedBox(
+  //                 width: 20,
+  //               ),
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text(
+  //                       "Sukces!",
+  //                       style: TextStyle(
+  //                           fontSize: 18,
+  //                           color: Colors.white,
+  //                           fontWeight: FontWeight.bold),
+  //                       maxLines: 1,
+  //                     ),
+  //                     Text(
+  //                       "Komponent został dodany pomyślnie!",
+  //                       style: TextStyle(color: Colors.white, fontSize: 14),
+  //                       maxLines: 2,
+  //                       overflow: TextOverflow.ellipsis,
+  //                     )
+  //                   ],
+  //                 ),
+  //               )
+  //             ],
+  //           ),
+  //         ),
+  //         behavior: SnackBarBehavior.floating,
+  //         backgroundColor: Colors.transparent,
+  //         elevation: 3,
+  //       ));
+  //     } catch (e) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Błąd przy dodawaniu komponentu: $e')),
+  //       );
+  //     }
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,8 +214,7 @@ class AddComponentScreenState extends State<AddComponentScreen> {
               ),
               const SizedBox(height: 16),
               TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Numer dostawy'),
+                decoration: const InputDecoration(labelText: 'Numer dostawy'),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   _deliveryId = int.parse(value);
@@ -146,7 +230,8 @@ class AddComponentScreenState extends State<AddComponentScreen> {
               TextFormField(
                 decoration:
                     const InputDecoration(labelText: 'Rozmiar komponentu'),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
                 onChanged: (value) {
                   _componentSize = double.parse(value);
                 },

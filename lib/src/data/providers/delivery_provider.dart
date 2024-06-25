@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/controllers/delivery_controller.dart';
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
 
 class DeliveryProvider with ChangeNotifier {
-  final DeliveryController _controller = DeliveryController();
+  final DeliveryController _controller;
+
+  DeliveryProvider(AuthProvider authProvider)
+      : _controller = DeliveryController(authProvider){
+        fetchDeliveries();
+      }
 
   List<Delivery> _deliveries = [];
 

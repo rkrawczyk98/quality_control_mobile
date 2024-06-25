@@ -1,9 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/controllers/subcomponent_status_controller.dart';
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/subcomponent_status_models.dart';
 
 class SubcomponentStatusProvider with ChangeNotifier {
-  final SubcomponentStatusController _controller = SubcomponentStatusController();
+  final SubcomponentStatusController _controller;
+
+  SubcomponentStatusProvider(AuthProvider authProvider)
+      : _controller = SubcomponentStatusController(authProvider){
+        fetchSubcomponentStatuses();
+      }
 
   List<SubcomponentStatus> _statuses = [];
 
@@ -38,7 +46,8 @@ class SubcomponentStatusProvider with ChangeNotifier {
   // Tworzenie nowego statusu podkomponentu
   Future<void> createSubcomponentStatus(CreateSubcomponentStatusDto dto) async {
     try {
-      SubcomponentStatus newStatus = await _controller.createSubcomponentStatus(dto);
+      SubcomponentStatus newStatus =
+          await _controller.createSubcomponentStatus(dto);
       _statuses.add(newStatus);
       notifyListeners();
     } catch (e) {
@@ -58,9 +67,11 @@ class SubcomponentStatusProvider with ChangeNotifier {
   }
 
   // Aktualizacja istniejącego statusu podkomponentu
-  Future<void> updateSubcomponentStatus(int id, UpdateSubcomponentStatusDto dto) async {
+  Future<void> updateSubcomponentStatus(
+      int id, UpdateSubcomponentStatusDto dto) async {
     try {
-      SubcomponentStatus updatedStatus = await _controller.updateSubcomponentStatus(id, dto);
+      SubcomponentStatus updatedStatus =
+          await _controller.updateSubcomponentStatus(id, dto);
       int index = _statuses.indexWhere((s) => s.id == id);
       if (index != -1) {
         _statuses[index] = updatedStatus;

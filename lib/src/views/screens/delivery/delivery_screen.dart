@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/add_delivery_screen.dart';
-import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_contents_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_details_screen.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
@@ -16,24 +17,12 @@ class DeliveryScreen extends StatefulWidget {
 
 class DeliveryScreenState extends State<DeliveryScreen> {
   late Future<List<Delivery>> futureDeliveries;
-  final DeliveryService deliveryService = DeliveryService();
 
   @override
   void initState() {
     super.initState();
-    _loadDeliveries();
-  }
-
-  Future<void> _loadDeliveries() async {
-    setState(() {
-      futureDeliveries = deliveryService.fetchDeliveries();
-    });
-  }
-
-  // ignore: unused_element
-  void _refreshDeliveries() {
-    setState(() {
-      futureDeliveries = deliveryService.fetchDeliveries();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DeliveryProvider>(context, listen: false).fetchDeliveries();
     });
   }
 
@@ -50,10 +39,22 @@ class DeliveryScreenState extends State<DeliveryScreen> {
               Tab(text: 'Utwórz'),
             ],
           ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () =>
+                  Provider.of<DeliveryProvider>(context, listen: false)
+                      .fetchDeliveries(),
+            ),
+          ],
         ),
         child: TabBarView(
           children: [
-            DeliveryList(futureDeliveries: futureDeliveries),
+            Consumer<DeliveryProvider>(
+              builder: (context, provider, child) {
+                return DeliveryList(deliveries: provider.deliveries);
+              },
+            ),
             const AddDeliveryScreen(),
           ],
         ),
@@ -63,53 +64,44 @@ class DeliveryScreenState extends State<DeliveryScreen> {
 }
 
 class DeliveryList extends StatelessWidget {
-  final Future<List<Delivery>> futureDeliveries;
+  final List<Delivery> deliveries;
 
-  const DeliveryList({super.key, required this.futureDeliveries});
+  const DeliveryList({super.key, required this.deliveries});
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Delivery>>(
-      future: futureDeliveries,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('Nie znaleziono żadnej dostawy.'));
-        } else {
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: snapshot.data!.map((delivery) {
-              return PackageItem(
-                delivery: delivery,
-                onDetailsTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DeliveryDetailsScreen(
-                        deliveryId: delivery.id,
-                      ),
-                    ),
-                  );
-                },
-                onContentTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DeliveryContentsScreen(
-                        deliveryId: delivery.id,
-                      ),
-                    ),
-                  );
-                },
+    if (deliveries.isEmpty) {
+      return const Center(child: Text('Nie znaleziono żadnej dostawy.'));
+    } else {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: deliveries.map((delivery) {
+          return PackageItem(
+            delivery: delivery,
+            onDetailsTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeliveryDetailsScreen(
+                    deliveryId: delivery.id,
+                  ),
+                ),
               );
-            }).toList(),
+            },
+            onContentTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DeliveryContentsScreen(
+                    deliveryId: delivery.id,
+                  ),
+                ),
+              );
+            },
           );
-        }
-      },
-    );
+        }).toList(),
+      );
+    }
   }
 }
 

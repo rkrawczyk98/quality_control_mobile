@@ -1,27 +1,21 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DeliveryService {
   final String baseUrl = 'http://172.22.175.245:8080/deliveries';
-  http.Client httpClient = AuthenticatedHttpClient(http.Client());
-  String? _jwtToken;
+  late http.Client httpClient;
 
-  Future<void> _loadAuthToken() async {
-    if (_jwtToken == null) {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      _jwtToken = prefs.getString('access_token');
-    }
+  DeliveryService(AuthProvider authProvider) {
+    httpClient = AuthenticatedHttpClient(http.Client(), authProvider);
   }
 
   Future<List<Delivery>> fetchDeliveries() async {
-    await _loadAuthToken();
     final response = await httpClient.get(
       Uri.parse(baseUrl),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json'
       },
     );
@@ -36,11 +30,9 @@ class DeliveryService {
   }
 
   Future<Delivery> fetchDelivery(int id) async {
-    await _loadAuthToken();
     final response = await httpClient.get(
       Uri.parse('$baseUrl/$id'),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json'
       },
     );
@@ -54,11 +46,9 @@ class DeliveryService {
   }
 
   Future<Delivery> createDelivery(CreateDeliveryDto createDeliveryDto) async {
-    await _loadAuthToken();
     final response = await httpClient.post(
       Uri.parse(baseUrl),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json'
       },
       body: jsonEncode(createDeliveryDto.toJson()),
@@ -73,11 +63,9 @@ class DeliveryService {
   }
 
   Future<void> deleteDelivery(int id) async {
-    await _loadAuthToken();
     final response = await httpClient.delete(
       Uri.parse('$baseUrl/$id'),
       headers: {
-        'Authorization': 'Bearer $_jwtToken',
         'Content-Type': 'application/json'
       },
     );

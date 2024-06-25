@@ -1,96 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
-import 'package:quality_control_mobile/src/data/providers/component_subcomponent_provider.dart';
-import 'package:quality_control_mobile/src/data/providers/subcomponent_status_provider.dart';
-// import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
-import 'package:quality_control_mobile/src/models/subcomponent_status_models.dart' as subcomponentStatusModels;
-
-class ComponentDetailsScreen extends StatelessWidget {
-  final int componentId;
-
-  const ComponentDetailsScreen({super.key, required this.componentId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Szczegóły Komponentu'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Consumer<ComponentProvider>(
-        builder: (context, provider, child) {
-          var component =
-              provider.components.firstWhere((c) => c.id == componentId);
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ComponentInfo(
-                  name: component.name,
-                  controlDate: component.controlDate,
-                  productionDate: component.productionDate,
-                  size: component.size,
-                  creationDate: component.creationDate,
-                  lastModified: component.lastModified,
-                  deletedAt: component.deletedAt,
-                  createdByUser: component.createdByUser.username,
-                  modifiedByUser: component.modifiedByUser.username,
-                  componentType: component.componentType,
-                  status: component.status,
-                  delivery: component.delivery.number,
-                  deliveryDate: component.delivery.deliveryDate,
-                  warehouse: component.warehouse.name,
-                  warehousePosition: component.warehousePosition.name,
-                  scrappedAt: component.scrappedAt,
-                ),
-                const SizedBox(height: 16),
-                Text('Podkomponenty:',
-                    style: Theme.of(context).textTheme.titleLarge),
-                ...component.subcomponents.map((subcomponent) => ListTile(
-                      leading: const Icon(Icons.extension),
-                      title: Text(subcomponent.name),
-                      subtitle: Consumer<SubcomponentStatusProvider>(
-                        builder: (context, statusProvider, child) {
-                          var status = statusProvider.statuses.firstWhere(
-                              (s) => s.id == subcomponent.id,
-                              orElse: () =>
-                                  subcomponentStatusModels.SubcomponentStatus(id: -1, name: 'Nieznany', creationDate: DateTime.now(), deletedAt: null, lastModified: DateTime.now()));
-                          return DropdownButton<int>(
-                            value: status.id,
-                            onChanged: (newValue) {
-                              if (newValue != null) {
-                                var subcomponentProvider =
-                                    Provider.of<ComponentSubcomponentProvider>(
-                                        context,
-                                        listen: false);
-                                subcomponentProvider.updateSubcomponentStatus(
-                                    subcomponent.id, newValue);
-                              }
-                            },
-                            items: statusProvider.statuses.map((status) {
-                              return DropdownMenuItem<int>(
-                                value: status.id,
-                                child: Text(status.name),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-                    ))
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class ComponentInfo extends StatelessWidget {
   final String name;
@@ -111,7 +20,7 @@ class ComponentInfo extends StatelessWidget {
   final DateTime? scrappedAt;
 
   const ComponentInfo({
-    Key? key,
+    super.key,
     required this.name,
     this.controlDate,
     this.productionDate,
@@ -128,7 +37,7 @@ class ComponentInfo extends StatelessWidget {
     required this.warehouse,
     required this.warehousePosition,
     this.scrappedAt,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,32 +49,6 @@ class ComponentInfo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            //   Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       const Text(
-            //         'Nazwa',
-            //         style: TextStyle(color: Colors.grey),
-            //       ),
-            //       const SizedBox(height: 4),
-            //       Text(
-            //         name,
-            //         style: const TextStyle(
-            //           color: Colors.white,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            //   const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            //     Icon(
-            //       Icons.info_outline,
-            //       color: Colors.green,
-            //       size: 30,
-            //     ),
-            //   ]),
-            // ]),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 const Text(
@@ -388,18 +271,6 @@ class ComponentInfo extends StatelessWidget {
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
               ]),
-              // Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              //   const Text(
-              //     'Typ komponentów',
-              //     style: TextStyle(color: Colors.grey),
-              //   ),
-              //   const SizedBox(height: 4),
-              //   Text(
-              //     componentType,
-              //     style: const TextStyle(
-              //         color: Colors.white, fontWeight: FontWeight.bold),
-              //   ),
-              // ]),
             ]),
           ],
         ),
@@ -407,109 +278,3 @@ class ComponentInfo extends StatelessWidget {
     );
   }
 }
-
-
-
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
-// import 'package:quality_control_mobile/src/data/providers/component_subcomponent_provider.dart';
-// import 'package:quality_control_mobile/src/data/providers/subcomponent_status_provider.dart';
-// import 'package:quality_control_mobile/src/models/component_models.dart';
-// import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
-
-// class ComponentDetailsScreen extends StatelessWidget {
-//   final int componentId;
-
-//   const ComponentDetailsScreen({super.key, required this.componentId});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Szczegóły Komponentu'),
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//       ),
-//       body: Consumer<ComponentProvider>(
-//         builder: (context, provider, child) {
-//           var component =
-//               provider.components.firstWhere((c) => c.id == componentId);
-//           return SingleChildScrollView(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 ComponentInfo(component: component),
-//                 const SizedBox(height: 16),
-//                 Text('Podkomponenty:',
-//                     style: Theme.of(context).textTheme.titleLarge),
-//                 ...component.subcomponents.map((subcomponent) => ListTile(
-//                       leading: const Icon(Icons.extension),
-//                       title: Text(subcomponent.name),
-//                       subtitle: Consumer<SubcomponentStatusProvider>(
-//                         builder: (context, statusProvider, child) {
-//                           var status = statusProvider.statuses
-//                               .firstWhere((s) => s.id == subcomponent.id);
-//                           return DropdownButton<int>(
-//                             value: status.id,
-//                             onChanged: (newValue) {
-//                               if (newValue != null) {
-//                                 var subcomponentProvider =
-//                                     Provider.of<ComponentSubcomponentProvider>(
-//                                         context,
-//                                         listen: false);
-//                                 subcomponentProvider.updateSubcomponentStatus(
-//                                     subcomponent.id, newValue);
-//                               }
-//                             },
-//                             items: statusProvider.statuses.map((status) {
-//                               return DropdownMenuItem<int>(
-//                                 value: status.id,
-//                                 child: Text(status.name),
-//                               );
-//                             }).toList(),
-//                           );
-//                         },
-//                       ),
-//                     ))
-//               ],
-//             ),
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }
-
-// class ComponentInfo extends StatelessWidget {
-//   final Component component;
-
-//   const ComponentInfo({super.key, required this.component});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       color: Colors.grey[850],
-//       margin: const EdgeInsets.symmetric(vertical: 8),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Nazwa: ${component.name}',
-//                 style: const TextStyle(color: Colors.white)),
-//             Text('Typ: ${component.componentType}',
-//                 style: const TextStyle(color: Colors.white)),
-//             Text('Status: ${component.status}',
-//                 style: const TextStyle(color: Colors.white)),
-//             Text('Data kontroli: ${formatDate(component.controlDate)}',
-//                 style: const TextStyle(color: Colors.white)),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/controllers/component_type_controller.dart';
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/component_type_models.dart';
 
 class ComponentTypeProvider with ChangeNotifier {
-  final ComponentTypeController _controller = ComponentTypeController();
+  final ComponentTypeController _controller;
+
+  ComponentTypeProvider(AuthProvider authProvider)
+      : _controller = ComponentTypeController(authProvider) {
+    fetchComponentTypes();
+  }
 
   List<ComponentType> _componentTypes = [];
 
@@ -49,7 +55,8 @@ class ComponentTypeProvider with ChangeNotifier {
   // Aktualizacja istniejącego typu komponentu
   Future<void> updateComponentType(int id, UpdateComponentTypeDto dto) async {
     try {
-      ComponentType updatedType = await _controller.updateComponentType(id, dto);
+      ComponentType updatedType =
+          await _controller.updateComponentType(id, dto);
       int index = _componentTypes.indexWhere((ct) => ct.id == id);
       if (index != -1) {
         _componentTypes[index] = updatedType;

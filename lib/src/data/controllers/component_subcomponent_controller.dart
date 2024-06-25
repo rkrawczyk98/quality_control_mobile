@@ -1,8 +1,12 @@
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/data/services/component_subcomponent_service.dart';
 import 'package:quality_control_mobile/src/models/component_subcomponent_models.dart';
 
 class ComponentSubcomponentController {
-  final ComponentSubcomponentService _service = ComponentSubcomponentService();
+  final ComponentSubcomponentService _service;
+
+  ComponentSubcomponentController(AuthProvider authProvider)
+      : _service = ComponentSubcomponentService(authProvider);
 
   Future<List<ComponentSubcomponent>> getComponentSubcomponents() async {
     return await _service.fetchComponentSubcomponents();

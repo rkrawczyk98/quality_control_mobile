@@ -1,11 +1,16 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/component_subcomponent_models.dart';
 import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
 class ComponentSubcomponentService {
   final String baseUrl = 'http://172.22.175.245:8080/component-subcomponents';
-  http.Client httpClient = AuthenticatedHttpClient(http.Client());
+  late http.Client httpClient;
+
+  ComponentSubcomponentService(AuthProvider authProvider) {
+    httpClient = AuthenticatedHttpClient(http.Client(), authProvider);
+  }
 
   Future<List<ComponentSubcomponent>> fetchComponentSubcomponents() async {
     final response = await httpClient.get(Uri.parse(baseUrl));

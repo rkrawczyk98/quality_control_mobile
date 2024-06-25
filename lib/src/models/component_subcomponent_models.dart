@@ -20,9 +20,9 @@ class ComponentSubcomponent {
   factory ComponentSubcomponent.fromJson(Map<String, dynamic> json) {
     return ComponentSubcomponent(
       id: json['id'],
-      componentId: json['componentId'],
-      subcomponentId: json['subcomponentId'],
-      statusId: json['statusId'],
+      componentId: json['component']['id'], 
+      subcomponentId: json['subcomponent']['id'], 
+      statusId: json['status']['id'], 
       creationDate: DateTime.parse(json['creationDate']),
       lastModified: DateTime.parse(json['lastModified']),
       deletedAt: json['deletedAt'] != null ? DateTime.parse(json['deletedAt']) : null,

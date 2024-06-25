@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
-import 'package:quality_control_mobile/src/data/services/component_service.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 import 'package:quality_control_mobile/src/views/screens/component/add_component_screen.dart';
@@ -15,25 +14,12 @@ class ComponentScreen extends StatefulWidget {
 
 class ComponentScreenState extends State<ComponentScreen> {
   late Future<List<Component>> futureComponents;
-  final ComponentService componentService = ComponentService();
 
   @override
   void initState() {
     super.initState();
     final provider = Provider.of<ComponentProvider>(context, listen: false);
     provider.fetchComponents();
-  }
-
-  Future<void> _loadComponents() async {
-    setState(() {
-      futureComponents = componentService.fetchComponents();
-    });
-  }
-
-  void _refreshComponents() {
-    setState(() {
-      futureComponents = componentService.fetchComponents();
-    });
   }
 
   @override

@@ -3,14 +3,15 @@ import 'package:quality_control_mobile/src/data/services/auth_service.dart';
 import 'package:quality_control_mobile/src/models/auth_models.dart';
 
 class AuthController {
-  final AuthService _authService = AuthService();
+  final AuthService _service;
   final AuthProvider _authProvider;
 
-  AuthController(this._authProvider);
+  AuthController(this._authProvider)
+      : _service = AuthService(_authProvider);
 
   Future<void> login(String username, String password) async {
     final loginRequest = LoginRequest(username: username, password: password);
-    final response = await _authService.login(loginRequest);
+    final response = await _service.login(loginRequest);
     final tokens = AuthTokens(
       accessToken: response['access_token'],
       refreshToken: response['refresh_token'],
@@ -24,8 +25,7 @@ class AuthController {
     if (refreshToken == null) {
       throw Exception('No refresh token available');
     }
-    final refreshTokenRequest = RefreshTokenRequest(refreshToken);
-    final response = await _authService.refreshToken(refreshTokenRequest);
+    final response = await _service.refreshToken();
     final tokens = AuthTokens(
       accessToken: response['access_token'],
       refreshToken: response['refresh_token'],
@@ -39,8 +39,7 @@ class AuthController {
     if (userId == null) {
       throw Exception('No user ID found');
     }
-    final logoutRequest = LogoutAllDevicesRequest(userId);
-    await _authService.logoutAll(logoutRequest);
+    await _service.logoutAll();
     await _authProvider.clearTokens();
   }
 
@@ -49,8 +48,7 @@ class AuthController {
     if (refreshToken == null) {
       throw Exception('No refresh token available');
     }
-    final logoutRequest = LogoutSingleDeviceRequest(refreshToken);
-    await _authService.logoutSingle(logoutRequest);
+    await _service.logoutSingle();
     await _authProvider.clearTokens();
   }
 }

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/data/controllers/customer_controller.dart';
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/models/customer_models.dart';
 
 class CustomerProvider with ChangeNotifier {
-  final CustomerController _controller = CustomerController();
+  final CustomerController _controller;
+
+  CustomerProvider(AuthProvider authProvider)
+      : _controller = CustomerController(authProvider){
+        fetchCustomers();
+      }
 
   List<Customer> _customers = [];
 

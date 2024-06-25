@@ -1,22 +1,26 @@
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
 
 class DeliveryController {
-  final DeliveryService service = DeliveryService();
+  final DeliveryService _service;
+
+  DeliveryController(AuthProvider authProvider)
+      : _service = DeliveryService(authProvider);
 
   Future<List<Delivery>> getDeliveries() async {
-    return await service.fetchDeliveries();
+    return await _service.fetchDeliveries();
   }
 
   Future<Delivery> getDelivery(int id) async {
-    return await service.fetchDelivery(id);
+    return await _service.fetchDelivery(id);
   }
 
   Future<Delivery> createDelivery(CreateDeliveryDto createDeliveryDto) async {
-    return await service.createDelivery(createDeliveryDto);
+    return await _service.createDelivery(createDeliveryDto);
   }
 
   Future<void> deleteDelivery(int id) async {
-    await service.deleteDelivery(id);
+    await _service.deleteDelivery(id);
   }
 }

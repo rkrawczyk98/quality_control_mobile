@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/data/services/component_type_service.dart';
-import 'package:quality_control_mobile/src/data/services/customer_service.dart';
-import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
+import 'package:provider/provider.dart';
+import 'package:quality_control_mobile/src/data/providers/component_type_provider.dart';
+import 'package:quality_control_mobile/src/data/providers/customer_provider.dart';
+import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
 import 'package:quality_control_mobile/src/models/component_type_models.dart';
 import 'package:quality_control_mobile/src/models/customer_models.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
@@ -15,12 +16,6 @@ class AddDeliveryScreen extends StatefulWidget {
 
 class AddDeliveryScreenState extends State<AddDeliveryScreen> {
   final _formKey = GlobalKey<FormState>();
-  final ComponentTypeService componentTypeService = ComponentTypeService();
-  final CustomerService customerService = CustomerService();
-  final DeliveryService deliveryService = DeliveryService();
-
-  late Future<List<ComponentType>> componentTypes;
-  late Future<List<Customer>> customers;
 
   int? _selectedComponentType;
   int? _selectedCustomer;
@@ -29,8 +24,12 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
   @override
   void initState() {
     super.initState();
-    componentTypes = componentTypeService.fetchComponentTypes();
-    customers = customerService.fetchCustomers();
+    final componentTypeProvider =
+        Provider.of<ComponentTypeProvider>(context, listen: false);
+    final customerProvider =
+        Provider.of<CustomerProvider>(context, listen: false);
+    componentTypeProvider.fetchComponentTypes();
+    customerProvider.fetchCustomers();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -56,8 +55,9 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
             DateTime.now().toIso8601String(),
       );
       try {
-        await deliveryService.createDelivery(newDelivery); //To DO ZROBIENIA
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        await Provider.of<DeliveryProvider>(context, listen: false)
+            .createDelivery(newDelivery);
+        ScaffoldMessenger.of(context).showSnackBar((SnackBar(
           content: Container(
             padding: const EdgeInsets.all(8),
             height: 75,
@@ -85,7 +85,7 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
                             fontSize: 18,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
-                            maxLines: 1,
+                        maxLines: 1,
                       ),
                       Text(
                         "Dostawa została dodana pomyślnie!",
@@ -102,7 +102,7 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
           behavior: SnackBarBehavior.floating,
           backgroundColor: Colors.transparent,
           elevation: 3,
-        ));
+        )));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Błąd przy dodawaniu dostawy: $e')),
@@ -123,15 +123,10 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
           key: _formKey,
           child: Column(
             children: [
-              FutureBuilder<List<ComponentType>>(
-                future: componentTypes,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+              Consumer<ComponentTypeProvider>(
+                builder: (context, provider, child) {
+                  if (provider.componentTypes.isEmpty) {
                     return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('No component types available');
                   } else {
                     return DropdownButtonFormField<int>(
                       decoration:
@@ -142,32 +137,24 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
                           _selectedComponentType = newValue;
                         });
                       },
-                      items: snapshot.data!.map((ComponentType componentType) {
+                      items: provider.componentTypes
+                          .map((ComponentType componentType) {
                         return DropdownMenuItem<int>(
                           value: componentType.id,
                           child: Text(componentType.name),
                         );
                       }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Proszę wybrać typ komponentu';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          value == null ? 'Proszę wybrać typ komponentu' : null,
                     );
                   }
                 },
               ),
               const SizedBox(height: 16),
-              FutureBuilder<List<Customer>>(
-                future: customers,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+              Consumer<CustomerProvider>(
+                builder: (context, provider, child) {
+                  if (provider.customers.isEmpty) {
                     return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Text('No customers available');
                   } else {
                     return DropdownButtonFormField<int>(
                       decoration: const InputDecoration(labelText: 'Klient'),
@@ -177,18 +164,14 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
                           _selectedCustomer = newValue;
                         });
                       },
-                      items: snapshot.data!.map((Customer customer) {
+                      items: provider.customers.map((Customer customer) {
                         return DropdownMenuItem<int>(
                           value: customer.id,
                           child: Text(customer.name),
                         );
                       }).toList(),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Proszę wybrać klienta';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          value == null ? 'Proszę wybrać klienta' : null,
                     );
                   }
                 },

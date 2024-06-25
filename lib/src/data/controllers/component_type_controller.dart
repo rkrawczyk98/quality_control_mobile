@@ -1,8 +1,12 @@
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/data/services/component_type_service.dart';
 import 'package:quality_control_mobile/src/models/component_type_models.dart';
 
 class ComponentTypeController {
-  final ComponentTypeService _service = ComponentTypeService();
+  final ComponentTypeService _service;
+
+  ComponentTypeController(AuthProvider authProvider)
+      : _service = ComponentTypeService(authProvider);
 
   Future<List<ComponentType>> getComponentTypes() async {
     return await _service.fetchComponentTypes();

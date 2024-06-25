@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quality_control_mobile/src/data/services/delivery_service.dart';
+import 'package:provider/provider.dart';
+import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 
@@ -10,70 +11,70 @@ class DeliveryDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DeliveryService deliveryService = DeliveryService();
+    // final DeliveryService deliveryService = DeliveryService();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Szczegóły Dostawy'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
+        appBar: AppBar(
+          title: const Text('Szczegóły Dostawy'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-        ],
-      ),
-      body: FutureBuilder<Delivery>(
-        future: deliveryService.fetchDelivery(deliveryId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
-            return const Center(child: Text('Brak danych'));
-          } else {
-            final delivery = snapshot.data!;
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DeliveryInfo(
-                    number: delivery.number,
-                    status: delivery.status.name,
-                    statusDate: delivery.deliveryDate.toIso8601String(),
-                    client: delivery.customer.name,
-                    deliveryDate: formatDate(delivery.creationDate),
-                    createdByUser: delivery.createdByUser.username,
-                    componentType: delivery.componentType.name,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Historia dostawy',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18),
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: ListView(
-                      children: const [Text('Brak historii dostawy')],
-                    ),
-                  ),
-                ],
-              ),
-            );
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                Provider.of<DeliveryProvider>(context, listen: false)
+                    .fetchDelivery(deliveryId);
+              },
+            ),
+          ],
+        ),
+        body: Consumer<DeliveryProvider>(builder: (context, provider, child) {
+          Delivery? delivery;
+          try {
+            delivery =
+                provider.deliveries.firstWhere((d) => d.id == deliveryId);
+          } catch (e) {
+            delivery = null;
           }
-        },
-      ),
-    );
+          if (delivery == null) {
+            return const Center(child: Text('Brak danych o dostawie.'));
+          }
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DeliveryInfo(
+                  number: delivery.number,
+                  status: delivery.status.name,
+                  statusDate: delivery.deliveryDate.toIso8601String(),
+                  client: delivery.customer.name,
+                  deliveryDate: formatDate(delivery.creationDate),
+                  createdByUser: delivery.createdByUser.username,
+                  componentType: delivery.componentType.name,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Historia dostawy',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView(
+                    children: const [Text('Brak historii dostawy')],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }));
   }
 }
 
