@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
+import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 import 'package:quality_control_mobile/src/views/screens/component/add_component_screen.dart';
 
@@ -47,22 +48,6 @@ class ComponentScreenState extends State<ComponentScreen> {
   }
 }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return AppScaffold(
-//       title: 'Zarządzanie komponentami',
-//       tabs: const [
-//         Tab(text: 'Przeglądaj'),
-//         Tab(text: 'Utwórz'),
-//       ],
-//       children: [
-//         ComponentList(futureComponents: futureComponents),
-//         const AddComponentScreen(),
-//       ],
-//     );
-//   }
-// }
-
 class ComponentList extends StatelessWidget {
   const ComponentList({super.key});
 
@@ -71,16 +56,35 @@ class ComponentList extends StatelessWidget {
     return Consumer<ComponentProvider>(
       builder: (context, provider, child) {
         if (provider.components.isEmpty) {
-          return const Center(child: Text('No components found'));
+          return const Center(
+              child: Text('Nie znaleziono żadnych komponentów.'));
         }
         return ListView(
           padding: const EdgeInsets.all(16),
           children: provider.components.map((component) {
             return ComponentItem(
-              component: component,
-              onTap: () {
-                // Dodaj logikę przejścia do szczegółów komponentu, jeśli istnieje
-              },
+              id: component.id,
+              name: component.name,
+              controlDate: component.controlDate,
+              productionDate: component.productionDate,
+              size: component.size,
+              creationDate: component.creationDate,
+              lastModified: component.lastModified,
+              deletedAt: component.deletedAt,
+              createdByUser: component.createdByUser,
+              modifiedByUser: component.modifiedByUser,
+              componentType: component.componentType,
+              status: component.status,
+              delivery: component.delivery,
+              warehouse: component.warehouse,
+              warehousePosition: component.warehousePosition,
+              scrappedAt: component.scrappedAt,
+              onDetailsTap: () => Navigator.pushNamed(
+                  context, '/component-details',
+                  arguments: component.id),
+              onManageTap: () => Navigator.pushNamed(
+                  context, '/component-contents',
+                  arguments: component.id),
             );
           }).toList(),
         );
@@ -90,13 +94,45 @@ class ComponentList extends StatelessWidget {
 }
 
 class ComponentItem extends StatelessWidget {
-  final Component component;
-  final VoidCallback onTap;
+  final int id;
+  final String name;
+  final DateTime? controlDate;
+  final DateTime? productionDate;
+  final double size;
+  final DateTime creationDate;
+  final DateTime lastModified;
+  final DateTime? deletedAt;
+  final User createdByUser;
+  final User modifiedByUser;
+  final String componentType;
+  final String status;
+  final Delivery delivery;
+  final Warehouse warehouse;
+  final WarehousePosition warehousePosition;
+  final DateTime? scrappedAt;
+  final VoidCallback onDetailsTap;
+  final VoidCallback onManageTap;
 
   const ComponentItem({
     super.key,
-    required this.component,
-    required this.onTap,
+    required this.name,
+    required this.componentType,
+    required this.status,
+    required this.warehouse,
+    required this.warehousePosition,
+    required this.productionDate,
+    required this.controlDate,
+    required this.id,
+    required this.size,
+    required this.creationDate,
+    required this.lastModified,
+    required this.deletedAt,
+    required this.createdByUser,
+    required this.modifiedByUser,
+    required this.delivery,
+    required this.scrappedAt,
+    required this.onDetailsTap,
+    required this.onManageTap,
   });
 
   @override
@@ -109,46 +145,153 @@ class ComponentItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Nazwa komponentu',
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              component.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                  const Text(
+                    'Numer dostawy',
+                    style: TextStyle(color: Colors.grey, fontSize: 16),
+                  ),
+                  Text(
+                    delivery.number,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+            ]),
+            const Divider(color: Colors.white),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Nazwa komponentu',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    name,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
               ),
-            ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.view_in_ar,
+                    color: Colors.green,
+                    size: 35,
+                  ),
+                ],
+              )
+            ]),
+            const SizedBox(height: 16),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text(
+                  'Typ',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  componentType,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ]),
+              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                const Text(
+                  'Status',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  status,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ]),
+            ]),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Data kontroli',
-                  style: TextStyle(color: Colors.grey),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Data produkcji',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      formatDate(productionDate),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                Text(
-                  component.controlDate?.toString() ?? 'Brak',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Magazyn',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      warehouse.name,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: onTap,
-                  style: TextButton.styleFrom(foregroundColor: Colors.green),
-                  child: const Text('Szczegóły'),
-                ),
-              ],
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Data kontroli',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    formatDate(controlDate ?? DateTime.now()),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Text(
+                    'Pozycja magazynowa',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    warehousePosition.name,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ]),
+            const SizedBox(height: 16),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              TextButton(
+                onPressed: onManageTap,
+                style: TextButton.styleFrom(foregroundColor: Colors.green),
+                child: const Text('Zarządzaj'),
+              ),
+              TextButton(
+                onPressed: onDetailsTap,
+                style: TextButton.styleFrom(foregroundColor: Colors.green),
+                child: const Text('Szczegóły'),
+              ),
+            ])
           ],
         ),
       ),

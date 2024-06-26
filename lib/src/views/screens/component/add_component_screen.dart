@@ -38,23 +38,6 @@ class AddComponentScreenState extends State<AddComponentScreen> {
       });
     }
   }
-  // Future<void> _selectDate(BuildContext context, bool isControlDate) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(2020),
-  //     lastDate: DateTime(2101),
-  //   );
-  //   if (picked != null) {
-  //     setState(() {
-  //       if (isControlDate) {
-  //         _controlDate = picked;
-  //       } else {
-  //         _productionDate = picked;
-  //       }
-  //     });
-  //   }
-  // }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
