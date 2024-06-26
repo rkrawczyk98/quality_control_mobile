@@ -35,13 +35,14 @@ class ComponentProvider with ChangeNotifier {
     }
   }
 
-  Future<void> createComponent(CreateComponentDto dto) async {
+  Future<int> createComponent(CreateComponentDto dto) async {
     try {
       Component component = await _controller.createComponent(dto);
       _components.add(component);
       notifyListeners();
+      return component.id;
     } catch (e) {
-      print('Failed to create component: $e');
+      throw('Failed to create component: $e');
     }
   }
 

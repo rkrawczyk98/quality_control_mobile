@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
@@ -29,8 +30,39 @@ class DeliveryContentsScreen extends StatelessWidget {
       child: Consumer<ComponentProvider>(
         builder: (context, provider, child) {
           if (provider.components.isEmpty) {
-            return const Center(
-                child: Text('Brak komponentów dla wybranej dostawy'));
+            return Expanded(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                (const Center(
+                    child: AutoSizeText(
+                  'Brak komponentów dla wybranej dostawy',
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.center,
+                ))),
+                const SizedBox(
+                  height: 18,
+                ),
+                Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.add,
+                        size: 50,
+                        color: Colors.blue,
+                      ),
+                      tooltip: 'Kliknij aby dodać komponent do tej dostawy.',
+                      onPressed: () => Navigator.pushNamed(
+                    context, '/create-component-deliveryId',
+                    arguments: deliveryId),
+                    ),
+                    const Text('Dodaj nowy komponent',
+                        style: TextStyle(color: Colors.blue))
+                  ],
+                )
+              ],
+            ));
           }
           return ListView.builder(
               itemCount: provider.components.length,

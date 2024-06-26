@@ -94,9 +94,9 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dodaj Dostawę'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Dodaj Dostawę'),
+      // ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
