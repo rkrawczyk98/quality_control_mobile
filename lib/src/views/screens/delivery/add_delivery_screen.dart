@@ -6,6 +6,8 @@ import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart
 import 'package:quality_control_mobile/src/models/component_type_models.dart';
 import 'package:quality_control_mobile/src/models/customer_models.dart';
 import 'package:quality_control_mobile/src/models/delivery_models.dart';
+import 'package:quality_control_mobile/src/views/dialogs/custom_snackbar.dart';
+import 'package:quality_control_mobile/src/views/dialogs/error_details_dialog.dart';
 
 class AddDeliveryScreen extends StatefulWidget {
   const AddDeliveryScreen({super.key});
@@ -55,58 +57,36 @@ class AddDeliveryScreenState extends State<AddDeliveryScreen> {
             DateTime.now().toIso8601String(),
       );
       try {
-        await Provider.of<DeliveryProvider>(context, listen: false)
-            .createDelivery(newDelivery);
-        ScaffoldMessenger.of(context).showSnackBar((SnackBar(
-          content: Container(
-            padding: const EdgeInsets.all(8),
-            height: 75,
-            decoration: const BoxDecoration(
-              color: Colors.green,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: const Row(
-              children: [
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 40,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sukces!",
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                      ),
-                      Text(
-                        "Dostawa została dodana pomyślnie!",
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          elevation: 3,
-        )));
+        int newDeliveryId =
+            await Provider.of<DeliveryProvider>(context, listen: false)
+                .createDelivery(newDelivery);
+        CustomSnackbar.showSuccessSnackbar(
+            context, "Dostawa została dodana pomyślnie!",
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pushNamed(
+                    context, '/delivery-details',
+                    arguments: newDeliveryId),
+                child: const Text('Szczegóły',
+                    style: TextStyle(color: Colors.white)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pushNamed(
+                    context, '/delivery-contents',
+                    arguments: newDeliveryId),
+                child: const Text('Zawartość',
+                    style: TextStyle(color: Colors.white)),
+              )
+            ]);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Błąd przy dodawaniu dostawy: $e')),
-        );
+        CustomSnackbar.showErrorSnackbar(
+            context,
+            'Błąd przy dodawaniu dostawy: $e',
+            () => showDialog(
+                context: context,
+                builder: (context) => ErrorDetailsDialog(
+                      errorMessage: e.toString(),
+                    )));
       }
     }
   }

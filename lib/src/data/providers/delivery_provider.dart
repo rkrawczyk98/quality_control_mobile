@@ -7,9 +7,9 @@ class DeliveryProvider with ChangeNotifier {
   final DeliveryController _controller;
 
   DeliveryProvider(AuthProvider authProvider)
-      : _controller = DeliveryController(authProvider){
-        fetchDeliveries();
-      }
+      : _controller = DeliveryController(authProvider) {
+    fetchDeliveries();
+  }
 
   List<Delivery> _deliveries = [];
 
@@ -42,20 +42,31 @@ class DeliveryProvider with ChangeNotifier {
   }
 
   // Tworzenie nowej dostawy
-  Future<void> createDelivery(CreateDeliveryDto dto) async {
+  Future<int> createDelivery(CreateDeliveryDto dto) async {
     try {
       Delivery newDelivery = await _controller.createDelivery(dto);
       _deliveries.add(newDelivery);
       notifyListeners();
+      return newDelivery.id;
     } catch (e) {
-      print("Failed to create delivery: $e");
+      throw ("Failed to create delivery: $e");
     }
   }
+  // Future<void> createDelivery(CreateDeliveryDto dto) async {
+  //   try {
+  //     Delivery newDelivery = await _controller.createDelivery(dto);
+  //     _deliveries.add(newDelivery);
+  //     notifyListeners();
+  //   } catch (e) {
+  //     throw("Failed to create delivery: $e");
+  //   }
+  // }
 
   // Aktualizacja istniejącej dostawy
   Future<void> updateDelivery(int id, CreateDeliveryDto dto) async {
     try {
-      Delivery updatedDelivery = await _controller.createDelivery(dto);  // assuming a similar method signature
+      Delivery updatedDelivery = await _controller
+          .createDelivery(dto); // assuming a similar method signature
       int index = _deliveries.indexWhere((d) => d.id == id);
       if (index != -1) {
         _deliveries[index] = updatedDelivery;
