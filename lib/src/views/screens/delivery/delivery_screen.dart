@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
@@ -128,7 +129,7 @@ class PackageItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
+              Expanded(child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -144,7 +145,7 @@ class PackageItem extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              )),
               const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Icon(
                   Icons.local_shipping_outlined,
@@ -157,39 +158,46 @@ class PackageItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text(
-                    'Typ komponentu',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Text(
-                    delivery.componentType.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ]),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  const Text(
-                    'Status',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Text(
-                    delivery.status.name,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ])
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                      const Text(
+                        'Typ komponentu',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        delivery.componentType.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ])),
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                      const Text(
+                        'Status',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Text(
+                        delivery.status.name,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]))
               ],
             ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
@@ -202,23 +210,28 @@ class PackageItem extends StatelessWidget {
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.clip,
                       ),
                     ),
                   ],
-                ),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  const Text(
-                    'Ostatnia zmiana',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  Text(
-                    formatDate(delivery.lastModified),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ])
+                )),
+                Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                      const Text(
+                        'Ostatnia zmiana',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      AutoSizeText(
+                        formatDate(delivery.lastModified),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.clip,
+                        ),
+                      ),
+                    ]))
               ],
             ),
             const SizedBox(height: 16),

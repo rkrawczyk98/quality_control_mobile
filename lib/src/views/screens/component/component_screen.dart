@@ -142,23 +142,27 @@ class ComponentItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
+        child: Expanded(
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                  const Text(
-                    'Numer dostawy',
-                    style: TextStyle(color: Colors.grey, fontSize: 16),
-                  ),
-                  Text(
-                    delivery.number,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+              const Text(
+                'Numer dostawy',
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
+              Text(
+                delivery.number,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16),
+              ),
             ]),
             const Divider(color: Colors.white),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -171,7 +175,7 @@ class ComponentItem extends StatelessWidget {
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ],
-              ),
+              )),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -185,36 +189,43 @@ class ComponentItem extends StatelessWidget {
             ]),
             const SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Text(
-                  'Typ',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  componentType,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ]),
-              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                const Text(
-                  'Status',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  status,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ]),
+              Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                    const Text(
+                      'Typ',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      componentType,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ])),
+              Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                    const Text(
+                      'Status',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      status,
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ])),
             ]),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
@@ -226,10 +237,12 @@ class ComponentItem extends StatelessWidget {
                       formatDate(productionDate),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                ),
-                Column(
+                )),
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
@@ -243,12 +256,13 @@ class ComponentItem extends StatelessWidget {
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ],
-                ),
+                )),
               ],
             ),
             const SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -260,10 +274,12 @@ class ComponentItem extends StatelessWidget {
                     formatDate(controlDate ?? DateTime.now()),
                     style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
-              ),
-              Column(
+              )),
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Text(
@@ -277,7 +293,7 @@ class ComponentItem extends StatelessWidget {
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ],
-              ),
+              )),
             ]),
             const SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -293,7 +309,7 @@ class ComponentItem extends StatelessWidget {
               ),
             ])
           ],
-        ),
+        )),
       ),
     );
   }
