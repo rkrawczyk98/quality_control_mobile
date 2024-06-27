@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
-import 'package:quality_control_mobile/src/data/providers/component_subcomponent_provider.dart';
-import 'package:quality_control_mobile/src/data/providers/subcomponent_status_provider.dart';
-// import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
-import 'package:quality_control_mobile/src/models/subcomponent_status_models.dart' as subcomponentStatusModels;
-
-class ComponentDetailsScreen extends StatelessWidget {
+class ComponentManageScreen extends StatelessWidget {
   final int componentId;
 
-  const ComponentDetailsScreen({super.key, required this.componentId});
+  const ComponentManageScreen({super.key, required this.componentId});
 
   @override
   Widget build(BuildContext context) {
@@ -49,40 +44,6 @@ class ComponentDetailsScreen extends StatelessWidget {
                   warehousePosition: component.warehousePosition.name,
                   scrappedAt: component.scrappedAt,
                 ),
-                const SizedBox(height: 16),
-                Text('Podkomponenty:',
-                    style: Theme.of(context).textTheme.titleLarge),
-                ...component.subcomponents.map((subcomponent) => ListTile(
-                      leading: const Icon(Icons.extension),
-                      title: Text(subcomponent.name),
-                      subtitle: Consumer<SubcomponentStatusProvider>(
-                        builder: (context, statusProvider, child) {
-                          var status = statusProvider.statuses.firstWhere(
-                              (s) => s.id == subcomponent.id,
-                              orElse: () =>
-                                  subcomponentStatusModels.SubcomponentStatus(id: -1, name: 'Nieznany', creationDate: DateTime.now(), deletedAt: null, lastModified: DateTime.now()));
-                          return DropdownButton<int>(
-                            value: status.id,
-                            onChanged: (newValue) {
-                              if (newValue != null) {
-                                var subcomponentProvider =
-                                    Provider.of<ComponentSubcomponentProvider>(
-                                        context,
-                                        listen: false);
-                                subcomponentProvider.updateSubcomponentStatus(
-                                    subcomponent.id, newValue);
-                              }
-                            },
-                            items: statusProvider.statuses.map((status) {
-                              return DropdownMenuItem<int>(
-                                value: status.id,
-                                child: Text(status.name),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-                    ))
               ],
             ),
           );
@@ -418,10 +379,10 @@ class ComponentInfo extends StatelessWidget {
 // import 'package:quality_control_mobile/src/models/component_models.dart';
 // import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 
-// class ComponentDetailsScreen extends StatelessWidget {
+// class ComponentManageScreen extends StatelessWidget {
 //   final int componentId;
 
-//   const ComponentDetailsScreen({super.key, required this.componentId});
+//   const ComponentManageScreen({super.key, required this.componentId});
 
 //   @override
 //   Widget build(BuildContext context) {

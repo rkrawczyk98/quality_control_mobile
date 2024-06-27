@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:quality_control_mobile/src/views/screens/admin/admin_panel_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/component/add_component_to_delivery_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/component/component_details_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/component/component_manage_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/core-app/about_app_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/core-app/settings_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_contents_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_details_screen.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
@@ -55,11 +59,20 @@ class MyApp extends StatelessWidget {
               ModalRoute.of(context)!.settings.arguments as int;
           return ComponentDetailsScreen(componentId: componentId);
         },
-        // '/component-contents': (context) {
-        //   final int componentId =
-        //       ModalRoute.of(context)!.settings.arguments as int;
-        //   return ComponentContentsScreen(deliveryId: componentId);
-        // },
+        '/component-manage': (context) {
+          final int componentId =
+              ModalRoute.of(context)!.settings.arguments as int;
+          return ComponentManageScreen(componentId: componentId);
+        },
+        '/admin-panel': (context) {
+          return const AdminPanelScreen();
+        },
+        '/settings': (context) {
+          return const SettingsScreen();
+        },
+        '/about-app': (context) {
+          return const AboutAppScreen();
+        },
       },
     );
   }

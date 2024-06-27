@@ -25,14 +25,16 @@ class GlobalScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: child,
-      floatingActionButton: showFAB ? buildSpeedDial(context) : null,//floatingActionButton: floatingActionButton ?? buildSpeedDial(context),
+      floatingActionButton: showFAB
+          ? buildSpeedDial(context)
+          : null, //floatingActionButton: floatingActionButton ?? buildSpeedDial(context),
       drawer: buildDrawer(context),
     );
   }
 
   SpeedDial buildSpeedDial(BuildContext context) {
     return SpeedDial(
-      icon: Icons.reorder,//Icons.add,
+      icon: Icons.reorder, //Icons.add,
       activeIcon: Icons.close,
       backgroundColor: Colors.red,
       foregroundColor: Colors.white,
@@ -47,12 +49,15 @@ class GlobalScaffold extends StatelessWidget {
       onOpen: () => print('OPENING DIAL'),
       onClose: () => print('DIAL CLOSED'),
       tooltip: 'Naciśnij aby rozwinąć',
-      heroTag: 'speed-dial-hero-tag',
+      // heroTag: 'speed-dial-hero-tag',
       elevation: 8.0,
       shape: const CircleBorder(),
       children: [
         SpeedDialChild(
-          child: const Icon(Icons.local_shipping_outlined, color: Colors.white,),
+          child: const Icon(
+            Icons.local_shipping_outlined,
+            color: Colors.white,
+          ),
           backgroundColor: Colors.orange,
           label: 'Panel dostaw',
           labelStyle: const TextStyle(fontSize: 18.0),
@@ -62,7 +67,10 @@ class GlobalScaffold extends StatelessWidget {
           ),
         ),
         SpeedDialChild(
-          child: const Icon(Icons.view_in_ar_sharp, color: Colors.white,),
+          child: const Icon(
+            Icons.view_in_ar_sharp,
+            color: Colors.white,
+          ),
           backgroundColor: Colors.blue,
           label: 'Panel komponentów',
           labelStyle: const TextStyle(fontSize: 18.0),
@@ -87,28 +95,30 @@ class GlobalScaffold extends StatelessWidget {
             child: Image.asset(
                 'assets/images/flutter_logo.png'), // Dodaj swoje logo
           ),
+          // ListTile(
+          //   title: const Text('Zarządzanie komponentami'),
+          //   onTap: () {
+          //     Navigator.pushReplacement(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => const ComponentScreen()),
+          //     );
+          //   },
+          // ),
           ListTile(
-            title: const Text('Zarządzanie komponentami'),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ComponentScreen()),
-              );
-            },
+            title: const Text('Panel administratora'),
+            onTap: () => Navigator.pushNamed(
+                  context, '/admin-panel'),
           ),
           ListTile(
             title: const Text('Ustawienia'),
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(
+                  context, '/settings'),
           ),
           ListTile(
-            title: const Text('Panel administratora'),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
-            },
+            title: const Text('O Aplikacji'),
+            onTap: () => Navigator.pushNamed(
+                  context, '/about-app'),
           ),
           ListTile(
             leading: const Icon(Icons.logout),

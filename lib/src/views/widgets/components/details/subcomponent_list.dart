@@ -20,13 +20,13 @@ class SubcomponentsList extends StatelessWidget {
 
         return ListView.builder(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: subcomponents.length,
           itemBuilder: (context, index) {
             var subcomponent = subcomponents[index];
             var subcomponentDetails = subcomponentProvider.subcomponents.firstWhere(
               (s) => s.id == subcomponent.subcomponentId,
-              orElse: () => throw Exception('Subcomponent not found'),
+              orElse: () => throw Exception('Nie znaleziono podkomponentów.'),
             );
 
             return ListTile(

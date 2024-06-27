@@ -83,7 +83,7 @@ class ComponentList extends StatelessWidget {
                   context, '/component-details',
                   arguments: component.id),
               onManageTap: () => Navigator.pushNamed(
-                  context, '/component-contents',
+                  context, '/component-manage',
                   arguments: component.id),
             );
           }).toList(),
