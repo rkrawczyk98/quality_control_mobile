@@ -91,99 +91,107 @@ class AddComponentScreenState extends State<AddComponentScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Numer komponentu'),
-                onChanged: (value) {
-                  _componentName = value;
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Proszę podać nazwę komponentu';
-                  }
-                  return null;
-                },
+        child: Column(children: [
+          Expanded(
+              child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Numer komponentu'),
+                    onChanged: (value) {
+                      _componentName = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Proszę podać nazwę komponentu';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Numer dostawy'),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      _deliveryId = int.parse(value);
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Proszę podać numer dostawy';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration:
+                        const InputDecoration(labelText: 'Rozmiar komponentu'),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    onChanged: (value) {
+                      _componentSize = double.parse(value);
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Proszę podać rozmiar komponentu';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: TextEditingController(
+                      text: _controlDate == null
+                          ? ''
+                          : _controlDate!.toLocal().toString().split(' ')[0],
+                    ),
+                    decoration:
+                        const InputDecoration(labelText: 'Data kontroli'),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      await _selectDate(context, true);
+                    },
+                    validator: (value) {
+                      if (_controlDate == null) {
+                        return 'Proszę podać datę kontroli';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: TextEditingController(
+                      text: _productionDate == null
+                          ? ''
+                          : _productionDate!.toLocal().toString().split(' ')[0],
+                    ),
+                    decoration:
+                        const InputDecoration(labelText: 'Data produkcji'),
+                    onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      await _selectDate(context, false);
+                    },
+                    validator: (value) {
+                      if (_productionDate == null) {
+                        return 'Proszę podać datę produkcji';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Text('Dodaj Komponent'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Numer dostawy'),
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  _deliveryId = int.parse(value);
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Proszę podać numer dostawy';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Rozmiar komponentu'),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                onChanged: (value) {
-                  _componentSize = double.parse(value);
-                },
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Proszę podać rozmiar komponentu';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: TextEditingController(
-                  text: _controlDate == null
-                      ? ''
-                      : _controlDate!.toLocal().toString().split(' ')[0],
-                ),
-                decoration: const InputDecoration(labelText: 'Data kontroli'),
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  await _selectDate(context, true);
-                },
-                validator: (value) {
-                  if (_controlDate == null) {
-                    return 'Proszę podać datę kontroli';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: TextEditingController(
-                  text: _productionDate == null
-                      ? ''
-                      : _productionDate!.toLocal().toString().split(' ')[0],
-                ),
-                decoration: const InputDecoration(labelText: 'Data produkcji'),
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  await _selectDate(context, false);
-                },
-                validator: (value) {
-                  if (_productionDate == null) {
-                    return 'Proszę podać datę produkcji';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Dodaj Komponent'),
-              ),
-            ],
-          ),
-        ),
+            ),
+          ))
+        ]),
       ),
     );
   }
