@@ -42,7 +42,7 @@ class ComponentProvider with ChangeNotifier {
       notifyListeners();
       return component.id;
     } catch (e) {
-      throw('Failed to create component: $e');
+      throw ('Failed to create component: $e');
     }
   }
 
@@ -62,6 +62,19 @@ class ComponentProvider with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('Failed to fetch components by delivery: $error');
+    }
+  }
+
+  Future<void> updateComponent(int id, UpdateComponentDto dto) async {
+    try {
+      Component updatedComponent = await _controller.updateComponent(id, dto);
+      int index = _components.indexWhere((component) => component.id == id);
+      if (index != -1) {
+        _components[index] = updatedComponent;
+        notifyListeners();
+      }
+    } catch (e) {
+      print('Failed to update component: $e');
     }
   }
 }

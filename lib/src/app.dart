@@ -8,6 +8,9 @@ import 'package:quality_control_mobile/src/views/screens/core-app/about_app_scre
 import 'package:quality_control_mobile/src/views/screens/core-app/settings_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_contents_screen.dart';
 import 'package:quality_control_mobile/src/views/screens/delivery/delivery_details_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/user/add_user_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/user/change_password_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/user/user_details_screen.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 import 'views/screens/auth/login_screen.dart';
 import 'views/screens/delivery/delivery_screen.dart';
@@ -72,6 +75,21 @@ class MyApp extends StatelessWidget {
         },
         '/about-app': (context) {
           return const AboutAppScreen();
+        },
+        // '/edit-user': (context) {
+        //   final int userId = ModalRoute.of(context)!.settings.arguments as int;
+        //   return EditUserScreen(userId: userId);
+        // },
+        '/user-details': (context) {
+          final int userId = ModalRoute.of(context)!.settings.arguments as int;
+          return UserDetailsScreen(userId: userId);
+        },
+        '/change-password': (context) {
+          final int userId = ModalRoute.of(context)!.settings.arguments as int;
+          return ChangePasswordScreen(userId: userId);
+        },
+        '/add-user': (context) {
+          return const AddUserScreen();
         },
       },
     );

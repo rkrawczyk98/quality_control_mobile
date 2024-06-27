@@ -27,4 +27,8 @@ class ComponentController {
   Future<List<Component>> getComponentsByDelivery(int id) async {
     return await _service.fetchComponentsByDelivery(id);
   }
+
+  Future<Component> updateComponent(int id, UpdateComponentDto dto) async {
+    return await _service.updateComponent(id, dto);
+  }
 }

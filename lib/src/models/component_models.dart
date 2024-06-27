@@ -10,7 +10,7 @@ class Component {
   final User createdByUser;
   final User modifiedByUser;
   final String componentType;
-  final String status;
+  final ComponentStatus status;
   final Delivery delivery;
   final Warehouse warehouse;
   final WarehousePosition warehousePosition;
@@ -50,7 +50,7 @@ class Component {
       createdByUser: User.fromJson(json['createdByUser']),
       modifiedByUser: User.fromJson(json['modifiedByUser']),
       componentType: json['componentType']['name'],
-      status: json['status']['name'],
+      status: ComponentStatus.fromJson(json['status']),
       delivery: Delivery.fromJson(json['delivery']),
       warehouse: Warehouse.fromJson(json['warehouse']),
       warehousePosition: WarehousePosition.fromJson(json['warehousePosition']),
@@ -58,6 +58,20 @@ class Component {
       subcomponents: (json['componentSubcomponents'] as List)
           .map((e) => Subcomponent.fromJson(e))
           .toList(),
+    );
+  }
+}
+
+class ComponentStatus {
+  final int id;
+  final String name;
+
+  ComponentStatus({required this.id, required this.name});
+
+  factory ComponentStatus.fromJson(Map<String, dynamic> json) {
+    return ComponentStatus(
+      id: json['id'],
+      name: json['name'],
     );
   }
 }
@@ -200,6 +214,29 @@ class CreateComponentDto {
       'productionDate': productionDate?.toIso8601String(),
       'deliveryId': deliveryId,
       'size': size,
+    };
+  }
+}
+
+class UpdateComponentDto {
+  final DateTime? productionDate;
+  final DateTime? controlDate;
+  final DateTime? scrappedAt;
+  final int? statusId;
+
+  UpdateComponentDto({
+    this.productionDate,
+    this.controlDate,
+    this.scrappedAt,
+    this.statusId,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (productionDate != null) 'productionDate': productionDate!.toIso8601String(),
+      if (controlDate != null) 'controlDate': controlDate!.toIso8601String(),
+      if (scrappedAt != null) 'scrappedAt': scrappedAt!.toIso8601String(),
+      if (statusId != null) 'statusId': statusId,
     };
   }
 }

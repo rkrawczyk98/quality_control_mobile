@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/app.dart';
 import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
+import 'package:quality_control_mobile/src/data/providers/component_status_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_subcomponent_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_type_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/customer_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/delivery_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/subcomponent_provider.dart';
 import 'package:quality_control_mobile/src/data/providers/subcomponent_status_provider.dart';
+import 'package:quality_control_mobile/src/data/providers/user_provider.dart';
 import 'package:quality_control_mobile/src/data/services/auth_service.dart';
 import 'src/data/controllers/auth_controller.dart';
 
@@ -53,9 +55,17 @@ void main() async {
           create: (context) => SubcomponentProvider(
               Provider.of<AuthProvider>(context, listen: false)),
         ),
-        Provider(
+        ChangeNotifierProvider(
           create: (context) =>
-              AuthController(Provider.of<AuthProvider>(context, listen: false),authService),
+              UserProvider(Provider.of<AuthProvider>(context, listen: false)),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ComponentStatusProvider(
+              Provider.of<AuthProvider>(context, listen: false)),
+        ),
+        Provider(
+          create: (context) => AuthController(
+              Provider.of<AuthProvider>(context, listen: false), authService),
         ),
       ],
       child: const MyApp(),

@@ -68,7 +68,7 @@ class AddComponentToDeliveryScreenState
               ),
               TextButton(
                 onPressed: () => Navigator.pushNamed(
-                    context, '/component-contents',
+                    context, '/component-manage',
                     arguments: newComponentId),
                 child: const Text('Zawartość',
                     style: TextStyle(color: Colors.white)),

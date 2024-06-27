@@ -53,7 +53,7 @@ class ComponentDetailsScreenState extends State<ComponentDetailsScreen> {
                   createdByUser: component.createdByUser.username,
                   modifiedByUser: component.modifiedByUser.username,
                   componentType: component.componentType,
-                  status: component.status,
+                  status: component.status.name,
                   delivery: component.delivery.number,
                   deliveryDate: component.delivery.deliveryDate,
                   warehouse: component.warehouse.name,
@@ -83,7 +83,7 @@ class ComponentDetailsScreenState extends State<ComponentDetailsScreen> {
                             onChanged: (newValue) {
                               if (newValue != null) {
                                 provider.updateSubcomponentStatus(
-                                    subcomponentInside.subcomponentId,
+                                    subcomponentInside.id,
                                     newValue);
                               }
                             },

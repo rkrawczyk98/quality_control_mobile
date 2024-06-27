@@ -74,7 +74,7 @@ class ComponentList extends StatelessWidget {
               createdByUser: component.createdByUser,
               modifiedByUser: component.modifiedByUser,
               componentType: component.componentType,
-              status: component.status,
+              status: component.status.name,
               delivery: component.delivery,
               warehouse: component.warehouse,
               warehousePosition: component.warehousePosition,
@@ -162,7 +162,7 @@ class ComponentItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Nazwa komponentu',
+                    'Numer komponentu',
                     style: TextStyle(color: Colors.grey),
                   ),
                   Text(

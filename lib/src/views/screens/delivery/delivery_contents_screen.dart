@@ -5,6 +5,7 @@ import 'package:quality_control_mobile/src/data/providers/component_provider.dar
 import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 import 'package:quality_control_mobile/src/views/screens/component/component_details_screen.dart';
+import 'package:quality_control_mobile/src/views/screens/component/component_manage_screen.dart';
 import 'package:quality_control_mobile/src/views/widgets/global_scaffold.dart';
 
 class DeliveryContentsScreen extends StatelessWidget {
@@ -54,8 +55,8 @@ class DeliveryContentsScreen extends StatelessWidget {
                       ),
                       tooltip: 'Kliknij aby dodać komponent do tej dostawy.',
                       onPressed: () => Navigator.pushNamed(
-                    context, '/create-component-deliveryId',
-                    arguments: deliveryId),
+                          context, '/create-component-deliveryId',
+                          arguments: deliveryId),
                     ),
                     const Text('Dodaj nowy komponent',
                         style: TextStyle(color: Colors.blue))
@@ -82,7 +83,7 @@ class DeliveryContentsScreen extends StatelessWidget {
                     createdByUser: component.createdByUser,
                     modifiedByUser: component.modifiedByUser,
                     componentType: component.componentType,
-                    status: component.status,
+                    status: component.status.name,
                     delivery: component.delivery,
                     warehouse: component.warehouse,
                     warehousePosition: component.warehousePosition,
@@ -97,7 +98,16 @@ class DeliveryContentsScreen extends StatelessWidget {
                         ),
                       )
                     },
-                    onManageTap: () => {},
+                    onManageTap: () => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ComponentManageScreen(
+                            componentId: component.id,
+                          ),
+                        ),
+                      )
+                    },
                   ),
                 );
               });
@@ -163,7 +173,7 @@ class ComponentInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Nazwa komponentu',
+                    'Numer komponentu',
                     style: TextStyle(color: Colors.grey),
                   ),
                   Text(

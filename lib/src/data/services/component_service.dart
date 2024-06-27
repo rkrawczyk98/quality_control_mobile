@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:quality_control_mobile/src/data/providers/auth_provider.dart';  // Zaimportuj AuthProvider
+import 'package:quality_control_mobile/src/data/providers/auth_provider.dart'; // Zaimportuj AuthProvider
 import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/utils/middlewares/authenticated_client.dart';
 
@@ -55,7 +55,8 @@ class ComponentService {
     }
   }
 
-  Future<Component> createComponent(CreateComponentDto createComponentDto) async {
+  Future<Component> createComponent(
+      CreateComponentDto createComponentDto) async {
     final response = await httpClient.post(
       Uri.parse(baseUrl),
       headers: {'Content-Type': 'application/json'},
@@ -77,6 +78,20 @@ class ComponentService {
 
     if (response.statusCode != 204) {
       throw Exception('Failed to delete component');
+    }
+  }
+
+  Future<Component> updateComponent(int id, UpdateComponentDto dto) async {
+    final response = await httpClient.put(
+      Uri.parse('$baseUrl/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(dto.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      return Component.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to update component');
     }
   }
 }
