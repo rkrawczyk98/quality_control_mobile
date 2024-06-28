@@ -16,6 +16,12 @@ class ComponentDetailsScreen extends StatefulWidget {
 }
 
 class ComponentDetailsScreenState extends State<ComponentDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<ComponentSubcomponentProvider>(context, listen: false);
+    provider.fetchSubcomponents();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +89,7 @@ class ComponentDetailsScreenState extends State<ComponentDetailsScreen> {
                             onChanged: (newValue) {
                               if (newValue != null) {
                                 provider.updateSubcomponentStatus(
-                                    subcomponentInside.id,
-                                    newValue);
+                                    subcomponentInside.id, newValue);
                               }
                             },
                             items: statusProvider.statuses.map((status) {
