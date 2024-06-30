@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:quality_control_mobile/src/utils/formatters/date_formater.dart';
 
@@ -201,7 +202,7 @@ class ComponentInfo extends StatelessWidget {
                       modifiedByUser,
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
-                      softWrap: true, // Zawijanie tekstu
+                      softWrap: true,
                     ),
                   ],
                 ),
@@ -220,11 +221,11 @@ class ComponentInfo extends StatelessWidget {
                       textAlign: TextAlign.right,
                     ),
                     const SizedBox(height: 4),
-                    Text(
+                    AutoSizeText(
                       formatDate(lastModified),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
-                      softWrap: true, // Zawijanie tekstu
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

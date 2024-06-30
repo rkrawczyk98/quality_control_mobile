@@ -30,7 +30,7 @@ class DeliveryScreenState extends State<DeliveryScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2, // Dla dwóch zakładek
+      length: 2,
       child: GlobalScaffold(
         appBar: AppBar(
           title: const Text('Zarządzanie dostawami'),

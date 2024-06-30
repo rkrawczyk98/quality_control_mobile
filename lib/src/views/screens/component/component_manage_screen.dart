@@ -114,7 +114,7 @@ class _ComponentManageScreenState extends State<ComponentManageScreen> {
                       ? ''
                       : _controlDate!.toLocal().toString().split(' ')[0],
                 ),
-                decoration: const InputDecoration(labelText: 'Data dostawy'),
+                decoration: const InputDecoration(labelText: 'Data kontroli'),
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
                   await _selectControlDate(context);
@@ -132,7 +132,7 @@ class _ComponentManageScreenState extends State<ComponentManageScreen> {
                       ? ''
                       : _productionDate!.toLocal().toString().split(' ')[0],
                 ),
-                decoration: const InputDecoration(labelText: 'Data dostawy'),
+                decoration: const InputDecoration(labelText: 'Data produkcji'),
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
                   await _selectProductionDate(context);
