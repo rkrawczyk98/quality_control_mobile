@@ -243,7 +243,7 @@ class ComponentItem extends StatelessWidget {
                 )),
                 Expanded(
                     child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Text(
                       'Magazyn',

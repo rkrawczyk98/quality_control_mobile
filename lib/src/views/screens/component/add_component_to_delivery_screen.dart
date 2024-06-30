@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quality_control_mobile/src/data/providers/component_provider.dart';
-// import 'package:quality_control_mobile/src/data/services/component_service.dart';
 import 'package:quality_control_mobile/src/models/component_models.dart';
 import 'package:quality_control_mobile/src/views/dialogs/custom_snackbar.dart';
 import 'package:quality_control_mobile/src/views/dialogs/error_details_dialog.dart';
