@@ -4,7 +4,7 @@ import 'package:quality_control_mobile/src/data/providers/user_provider.dart';
 import 'package:quality_control_mobile/src/models/user_models.dart';
 
 class AddUserScreen extends StatefulWidget {
-  const AddUserScreen({Key? key}) : super(key: key);
+  const AddUserScreen({super.key});
 
   @override
   _AddUserScreenState createState() => _AddUserScreenState();

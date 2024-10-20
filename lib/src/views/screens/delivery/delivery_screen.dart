@@ -129,7 +129,8 @@ class PackageItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Expanded(child: Column(
+              Expanded(
+                  child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
@@ -221,7 +222,7 @@ class PackageItem extends StatelessWidget {
                         children: [
                       const Text(
                         'Ostatnia zmiana',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Colors.grey),textAlign: TextAlign.right,
                       ),
                       AutoSizeText(
                         formatDate(delivery.lastModified),
@@ -230,21 +231,26 @@ class PackageItem extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           overflow: TextOverflow.clip,
                         ),
+                        textAlign: TextAlign.right,
                       ),
                     ]))
               ],
             ),
             const SizedBox(height: 16),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              TextButton(
-                onPressed: onContentTap,
-                style: TextButton.styleFrom(foregroundColor: Colors.green),
-                child: const Text('Zawartość'),
+              Expanded(
+                child: TextButton(
+                  onPressed: onContentTap,
+                  style: TextButton.styleFrom(foregroundColor: Colors.green),
+                  child: const Text('Zawartość'),
+                ),
               ),
-              TextButton(
-                onPressed: onDetailsTap,
-                style: TextButton.styleFrom(foregroundColor: Colors.green),
-                child: const Text('Szczegóły'),
+              Expanded(
+                child: TextButton(
+                  onPressed: onDetailsTap,
+                  style: TextButton.styleFrom(foregroundColor: Colors.green),
+                  child: const Text('Szczegóły'),
+                ),
               ),
             ])
           ],
